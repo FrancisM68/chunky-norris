@@ -1,0 +1,484 @@
+// =============================================================================
+// ChunkyNorris — Prisma Schema
+// =============================================================================
+// Each rescue organisation lives in its own PostgreSQL schema (multi-tenancy).
+// The Prisma schema defines the shape of that per-rescue schema.
+// The top-level `rescues` table lives in the `public` schema — see note below.
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// =============================================================================
+// RESCUE (Tenant registry — lives in the public schema, not per-rescue)
+// =============================================================================
+// This is the only table shared across all tenants. It maps each rescue to its
+// own PostgreSQL schema (e.g. "dar", "lhac"). Everything else is per-schema.
+// =============================================================================
+
+model Rescue {
+  id          String   @id @default(cuid())
+  name        String                          // "Drogheda Animal Rescue"
+  slug        String   @unique                // "dar" — used as schema name
+  email       String?
+  phone       String?
+  address     String?
+  charityNum  String?                         // Registered charity number
+  petSupplier String?                         // Registered pet supplier number
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("rescues")
+}
+
+// =============================================================================
+// VOLUNTEER
+// =============================================================================
+// Covers all human roles: admins, fosters, TNR operators, home check
+// inspectors. A single person can hold multiple roles.
+// =============================================================================
+
+model Volunteer {
+  id              String    @id @default(cuid())
+  firstName       String
+  lastName        String
+  email           String?   @unique
+  phone           String?
+  phone2          String?
+  address1        String?
+  address2        String?
+  town            String?
+  county          String?
+  eircode         String?
+  roles           Role[]    @default([FOSTER])
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  treatmentLogs   TreatmentLog[]    // Treatments this volunteer administered
+  fosterAssignments FosterAssignment[]
+  tnrRecords      TNRRecord[]       @relation("TNRVolunteer1")
+  tnrRecords2     TNRRecord[]       @relation("TNRVolunteer2")
+  homeChecks      HomeCheck[]
+  animalsAdded    Animal[]          @relation("AnimalAddedBy")
+
+  @@map("volunteers")
+}
+
+enum Role {
+  ADMIN
+  FOSTER
+  VOLUNTEER
+  TNR_OPERATOR
+  HOME_CHECKER
+}
+
+// =============================================================================
+// ANIMAL
+// =============================================================================
+// The central entity. Species drives which fields are relevant (FIV/FeLV for
+// cats only, kennel cough for dogs only, etc.). Dual naming system: official
+// structured name (location + descriptor) plus a foster-friendly nickname.
+// =============================================================================
+
+model Animal {
+  id                    String        @id @default(cuid())
+
+  // --- Naming ---
+  officialName          String        // Structured: "Moneymore Kitten1 - Oynx"
+  nickname              String?       // Foster-friendly: "Stumpy"
+
+  // --- Identity ---
+  species               Species
+  breed                 String?       // DSH, DLH, Labrador, etc.
+  description           String?       // Coat colour/pattern: "Black & White"
+  gender                Gender
+  dateOfBirth           DateTime?     // Estimated if unknown
+  dobIsEstimate         Boolean       @default(true)
+  ageAtIntake           String?       // Free text: "~6 weeks", "2-3 years"
+  microchipNumber       String?       @unique
+  microchipDate         DateTime?
+
+  // --- Intake ---
+  intakeDate            DateTime
+  intakeSource          IntakeSource
+  strayLocation         String?       // Where found, if stray
+  infoSource            String?       // Who provided intake info
+  darRefNumber          String?       // Internal DAR reference
+  vetRefNumber          String?       // Vet's reference number
+
+  // --- Status ---
+  status                AnimalStatus  @default(IN_CARE)
+  currentLocation       String?       // "Foster Care", "Vet", "DAR HQ"
+  condition             Condition?    // GOOD, OK, POOR — used for dogs
+
+  // --- Medical ---
+  vaccinationStatus     VaccinationStatus?
+  v1Date                DateTime?
+  v2Date                DateTime?
+  vaccineType           String?       // "Nobivac Tri-Cat", "PureVax RCPCh+FeLV"
+  neuteredDate          DateTime?
+  neuteredVet           String?
+  fivResult             TestResult?   // Cats only — FIV test outcome
+  felvResult            TestResult?   // Cats only — FeLV test outcome
+  kennelCoughDate       DateTime?     // Dogs only
+  rabiesDate            DateTime?     // Dogs only — if applicable
+
+  // --- Outcome ---
+  departureDate         DateTime?
+  disposalMethod        DisposalMethod? // P0: mandatory when animal leaves care
+  totalDaysInCare       Int?            // Calculated on departure
+
+  // --- Legacy data ---
+  legacyNotes           String?       // Raw NOTES field from Excel — do not parse
+
+  // --- Meta ---
+  addedById             String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  // Relations
+  addedBy               Volunteer?    @relation("AnimalAddedBy", fields: [addedById], references: [id])
+  treatmentLogs         TreatmentLog[]
+  fosterAssignments     FosterAssignment[]
+  adoption              Adoption?
+  tnrRecord             TNRRecord?
+
+  @@map("animals")
+}
+
+enum Species {
+  CAT
+  DOG
+  RABBIT
+  FERRET
+}
+
+enum Gender {
+  MALE_INTACT
+  MALE_NEUTERED
+  FEMALE_INTACT
+  FEMALE_NEUTERED
+  UNKNOWN
+}
+
+enum IntakeSource {
+  STRAY
+  SURRENDER
+  TNR
+  ABANDONED
+  ORPHANED
+  RTA           // Road traffic accident
+  POUND
+}
+
+enum AnimalStatus {
+  IN_CARE
+  FOSTERED
+  ADOPTED
+  RETURNED_TO_OWNER
+  EUTHANISED
+  DIED_IN_CARE
+  TNR_RETURNED
+}
+
+enum Condition {
+  GOOD
+  OK
+  POOR
+}
+
+enum VaccinationStatus {
+  NOT_VACCINATED
+  V1_ONLY
+  V1_AND_V2
+  FULLY_VACCINATED
+  UNKNOWN
+}
+
+enum TestResult {
+  POSITIVE
+  NEGATIVE
+  NOT_TESTED
+}
+
+enum DisposalMethod {
+  REHOMED
+  RECLAIMED           // Returned to original owner
+  EUTHANISED
+  DIED_IN_CARE
+  TNR_RETURNED        // Feral cat returned to colony
+  TRANSFERRED         // To another rescue
+}
+
+// =============================================================================
+// TREATMENT LOG  — P0 COMPLIANCE CRITICAL
+// =============================================================================
+// Every field in this model exists for a Department of Agriculture regulatory
+// reason. Do NOT remove or simplify fields. Do NOT make them optional unless
+// explicitly approved by the stakeholder.
+//
+// The DoA requires: medication name, dosage, date, administrator identity,
+// animal weight at time of treatment, and disposal method for the medication.
+// =============================================================================
+
+model TreatmentLog {
+  id                    String            @id @default(cuid())
+  animalId              String
+  administeredById      String
+
+  // --- What was given --- (P0)
+  medicationType        MedicationType
+  medicationName        String            // Structured: "Milbemax", "Bravecto"
+  medicationNameFreeText String?          // Override for non-standard medications
+  dosageAmount          Float
+  dosageUnit            DosageUnit        // ml, mg, tablet, pipette, etc.
+  batchNumber           String?           // For audit trail
+
+  // --- When and by whom --- (P0)
+  administeredAt        DateTime          // Date AND time
+  animalWeightKg        Float             // P0: weight at time of treatment
+
+  // --- Medication disposal --- (P0)
+  medicationDisposal    MedicationDisposal
+
+  // --- Context ---
+  treatmentReason       String?           // "Cat flu treatment", "Routine worming"
+  notes                 String?           // Any observations
+
+  // --- Meta ---
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  // Relations
+  animal                Animal            @relation(fields: [animalId], references: [id])
+  administeredBy        Volunteer         @relation(fields: [administeredById], references: [id])
+
+  @@map("treatment_logs")
+}
+
+enum MedicationType {
+  DEWORMING
+  FLEA_TREATMENT
+  TICK_TREATMENT
+  VACCINATION
+  ANTIBIOTIC
+  ANTI_INFLAMMATORY
+  EYE_DROPS
+  EAR_DROPS
+  LONG_TERM_MEDICATION
+  OTHER
+}
+
+enum DosageUnit {
+  ML
+  MG
+  TABLET
+  HALF_TABLET
+  PIPETTE
+  SPOT_ON
+  SPRAY_DOSE
+  OTHER
+}
+
+enum MedicationDisposal {
+  ADMINISTERED_IN_FULL   // Full dose given to animal
+  PARTIAL_RETURNED       // Remainder returned to DAR stock
+  DISPOSED_OF            // Remainder safely disposed
+  COURSE_ONGOING         // Multi-day course, more doses to follow
+}
+
+// =============================================================================
+// FOSTER ASSIGNMENT
+// =============================================================================
+// Links an animal to a foster volunteer. Multiple assignments possible (tracks
+// handoffs between fosters).
+// =============================================================================
+
+model FosterAssignment {
+  id          String    @id @default(cuid())
+  animalId    String
+  fosterId    String
+  startDate   DateTime
+  endDate     DateTime?
+  isActive    Boolean   @default(true)
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  animal      Animal    @relation(fields: [animalId], references: [id])
+  foster      Volunteer @relation(fields: [fosterId], references: [id])
+
+  @@map("foster_assignments")
+}
+
+// =============================================================================
+// TNR RECORD
+// =============================================================================
+// Trap-Neuter-Return records for feral cats. Stored separately from the main
+// animal register as required by Department of Agriculture regulations.
+// =============================================================================
+
+model TNRRecord {
+  id                String      @id @default(cuid())
+  animalId          String?     @unique   // Optional — may not have full animal record
+  volunteer1Id      String?
+  volunteer2Id      String?
+
+  // --- Location ---
+  locationName      String      // "Moneymore Estate"
+  county            String
+  contactName       String?
+  contactNumber     String?
+
+  // --- Animal details ---
+  sex               Gender
+  ageEstimate       String?     // "Young Adult", "Kitten", etc.
+  coatColour        String?
+  earTipped         Boolean     @default(false)
+
+  // --- Dates ---
+  dateIntoDar       DateTime
+  dateOutOfDar      DateTime?
+  dateNeutered      DateTime?
+  elapsedDays       Int?
+
+  // --- Medical ---
+  vetHospital       String?
+  apRefNumber       String?     // AllPets reference number
+  vaccinationStatus VaccinationStatus?
+  vaccineType       String?
+  fivResult         TestResult?
+  felvResult        TestResult?
+
+  // --- Outcome ---
+  status            TNRStatus   @default(IN_PROGRESS)
+  outcome           TNROutcome?
+  notes             String?
+
+  // --- Meta ---
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  animal            Animal?     @relation(fields: [animalId], references: [id])
+  volunteer1        Volunteer?  @relation("TNRVolunteer1", fields: [volunteer1Id], references: [id])
+  volunteer2        Volunteer?  @relation("TNRVolunteer2", fields: [volunteer2Id], references: [id])
+
+  @@map("tnr_records")
+}
+
+enum TNRStatus {
+  IN_PROGRESS
+  COMPLETED
+  ON_HOLD
+}
+
+enum TNROutcome {
+  RETURNED_RELEASED
+  REHOMED
+  EUTHANISED
+  DIED_IN_CARE
+  TRANSFERRED
+}
+
+// =============================================================================
+// HOME CHECK
+// =============================================================================
+// 35-question property assessment for dog adoptions. Required by DoA.
+// The full questionnaire is stored as structured JSON for flexibility —
+// questions can be updated without a schema migration.
+// =============================================================================
+
+model HomeCheck {
+  id              String          @id @default(cuid())
+  adoptionId      String?         @unique
+  inspectorId     String
+  adoptionId2     String?         // Link to adoption record when complete
+
+  // --- Property ---
+  address         String
+  town            String?
+  county          String?
+  eircode         String?
+
+  // --- Assessment ---
+  checkDate       DateTime
+  gardenSecure    Boolean?
+  gardenNotes     String?
+  responses       Json            // 35 questions stored as { questionId: answer }
+  overallResult   HomeCheckResult
+  inspectorNotes  String?
+
+  // --- Meta ---
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  inspector       Volunteer       @relation(fields: [inspectorId], references: [id])
+  adoption        Adoption?       @relation(fields: [adoptionId], references: [id])
+
+  @@map("home_checks")
+}
+
+enum HomeCheckResult {
+  APPROVED
+  APPROVED_WITH_CONDITIONS
+  REJECTED
+  PENDING_FOLLOW_UP
+}
+
+// =============================================================================
+// ADOPTION
+// =============================================================================
+// Records the handoff of an animal to its new owner. Includes treatment
+// history summary — required so new owners know what medications were given.
+// =============================================================================
+
+model Adoption {
+  id                    String    @id @default(cuid())
+  animalId              String    @unique
+  darVolunteerId        String?
+
+  // --- Adopter details ---
+  adopterName           String
+  adopterAddress1       String?
+  adopterAddress2       String?
+  adopterTown           String?
+  adopterCounty         String?
+  adopterEircode        String?
+  adopterPhone          String?
+  adopterMobile         String?
+  adopterEmail          String?
+
+  // --- Transaction ---
+  adoptionDate          DateTime
+  adoptionFee           Float?
+  paymentMethod         PaymentMethod?
+  amountReceived        Float?
+
+  // --- Documentation ---
+  treatmentSummary      String?   // Auto-generated from TreatmentLog records
+  agreementSigned       Boolean   @default(false)
+  agreementDate         DateTime?
+
+  // --- Meta ---
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  animal                Animal    @relation(fields: [animalId], references: [id])
+  homeCheck             HomeCheck?
+
+  @@map("adoptions")
+}
+
+enum PaymentMethod {
+  CASH
+  CHEQUE
+  BANK_TRANSFER
+}
