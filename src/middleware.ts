@@ -31,7 +31,6 @@ export function resolveRouteAccess(
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-
   // Auth.js v5 sets one of these cookie names depending on environment
   const hasSession =
     req.cookies.has("authjs.session-token") ||
