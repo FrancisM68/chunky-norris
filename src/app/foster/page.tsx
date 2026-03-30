@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -271,6 +271,10 @@ const styles = `
     color: rgba(255,255,255,0.85); margin-bottom: 16px; font-weight:500;
     letter-spacing:.06em; text-transform:uppercase; position:relative;
   }
+  .header-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .header-top .dar-badge { margin-bottom:0; }
+  .signout-btn { background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); border-radius:20px; padding:5px 12px; font-size:11px; color:rgba(255,255,255,0.85); font-weight:500; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; position:relative; }
+  .signout-btn:active { background:rgba(255,255,255,0.2); }
   .greeting { font-family:'Fraunces',serif; font-size:26px; color:#fff; font-weight:600; line-height:1.2; margin-bottom:4px; position:relative; }
   .greeting span { font-style:italic; color:#A8D5A2; }
   .greeting-sub { color:rgba(255,255,255,0.6); font-size:13px; font-weight:400; position:relative; }
@@ -744,7 +748,15 @@ export default function FosterApp() {
           <>
             <div className="screen">
               <div className="home-header">
-                <div className="dar-badge">🐾 DAR · Drogheda Animal Rescue</div>
+                <div className="header-top">
+                  <div className="dar-badge">🐾 DAR · Drogheda Animal Rescue</div>
+                  <button
+                    className="signout-btn"
+                    onClick={() => signOut({ redirectTo: "/login" })}
+                  >
+                    Sign out
+                  </button>
+                </div>
                 <div className="greeting">
                   {getTimeGreeting()},<br />
                   <span>{fosterName || "there"}!</span>
