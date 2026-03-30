@@ -1,6 +1,11 @@
 import { describe, it, expect, vi } from "vitest";
 
-vi.mock("@/auth", () => ({ auth: vi.fn() }));
+// Mock next-auth and auth.config to prevent Edge/Node.js module resolution
+// issues in vitest. Only resolveRouteAccess (pure function) is tested here.
+vi.mock("next-auth", () => ({
+  default: () => ({ auth: vi.fn((handler: unknown) => handler) }),
+}));
+vi.mock("./auth.config", () => ({ authConfig: {} }));
 
 import { resolveRouteAccess } from "./middleware";
 

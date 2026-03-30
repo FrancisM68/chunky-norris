@@ -1,11 +1,11 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { Role } from "@prisma/client";
-import { JWT } from "next-auth/jwt";
+import { authConfig } from "../auth.config";
 import { getTenantClient } from "@/lib/tenant";
 import { authorizeCredentials } from "@/lib/auth-helpers";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {
@@ -26,22 +26,4 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       },
     }),
   ],
-  callbacks: {
-    jwt({ token, user }) {
-      if (user) {
-        token.volunteerId = user.id as string;
-        token.roles = (user as { id: string; roles: Role[] }).roles;
-      }
-      return token;
-    },
-    session({ session, token }) {
-      const jwt = token as JWT;
-      session.user.volunteerId = jwt.volunteerId;
-      session.user.roles = jwt.roles;
-      return session;
-    },
-  },
-  pages: {
-    signIn: "/login",
-  },
 });
