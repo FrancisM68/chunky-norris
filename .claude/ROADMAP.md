@@ -85,11 +85,13 @@ slice of the compliance system.
 
 ## Milestones and releases
 
-### v0.1.0 — Foundation (End of Day 2)
+### v0.1.0 — Foundation ✅ Released 2026-03-30
 The first slice that actually works end-to-end.
 - Foster can log a treatment in 3 steps
 - Treatment is stored in the database with all P0 fields
-- Admin can see it was logged
+- Auth.js v5 credentials login with RBAC middleware
+- Session includes volunteerId and roles — localStorage hack removed
+- Sign out with redirect to /login
 **Significance:** Proves the architecture works. First moment DAR
 could theoretically use this instead of paper notebooks.
 
