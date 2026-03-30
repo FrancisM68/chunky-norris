@@ -1,48 +1,43 @@
-import NextAuth from "next-auth";
-import { authConfig } from "./auth.config";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-const { auth } = NextAuth(authConfig);
+// Public path prefixes — always allowed
+const PUBLIC_PREFIXES = ["/login", "/api/auth", "/_next", "/favicon.ico"];
 
-// Public path prefixes — no session required
-const PUBLIC_PREFIXES = ["/login", "/api/auth"];
+// Protected path prefixes — require a session cookie
+const PROTECTED_PREFIXES = ["/foster", "/admin"];
 
-type AccessResult = "allow" | "redirect-login";
+export type AccessResult = "allow" | "redirect-login";
 
 /**
- * Pure function — determines route access from pathname + roles.
- * Extracted for testability. No Next.js dependencies.
+ * Pure function — determines route access from pathname + cookie presence.
+ * Extracted for testability.
  */
 export function resolveRouteAccess(
   pathname: string,
-  roles: string[] | null
+  hasSession: boolean
 ): AccessResult {
   const isPublic = PUBLIC_PREFIXES.some((prefix) =>
     pathname.startsWith(prefix)
   );
   if (isPublic) return "allow";
 
-  if (!roles) return "redirect-login";
+  const isProtected = PROTECTED_PREFIXES.some((prefix) =>
+    pathname.startsWith(prefix)
+  );
+  if (!isProtected) return "allow";
 
-  if (pathname.startsWith("/admin")) {
-    return roles.includes("ADMIN") ? "allow" : "redirect-login";
-  }
-
-  if (pathname.startsWith("/foster")) {
-    return roles.includes("FOSTER") || roles.includes("ADMIN")
-      ? "allow"
-      : "redirect-login";
-  }
-
-  return "allow";
+  return hasSession ? "allow" : "redirect-login";
 }
 
-export default auth((req) => {
-  const session = req.auth;
+export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const roles = session?.user?.roles ?? null;
-  const access = resolveRouteAccess(pathname, roles as string[] | null);
+  // Auth.js v5 sets one of these cookie names depending on environment
+  const hasSession =
+    req.cookies.has("authjs.session-token") ||
+    req.cookies.has("__Secure-authjs.session-token");
+
+  const access = resolveRouteAccess(pathname, hasSession);
 
   if (access === "redirect-login") {
     const loginUrl = new URL("/login", req.url);
@@ -51,7 +46,9 @@ export default auth((req) => {
   }
 
   return NextResponse.next();
-});
+}
+
+export default middleware;
 
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],

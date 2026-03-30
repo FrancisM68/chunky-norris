@@ -1,42 +1,31 @@
-import { describe, it, expect, vi } from "vitest";
-
-// Mock next-auth and auth.config to prevent Edge/Node.js module resolution
-// issues in vitest. Only resolveRouteAccess (pure function) is tested here.
-vi.mock("next-auth", () => ({
-  default: () => ({ auth: vi.fn((handler: unknown) => handler) }),
-}));
-vi.mock("./auth.config", () => ({ authConfig: {} }));
-
+import { describe, it, expect } from "vitest";
 import { resolveRouteAccess } from "./middleware";
 
 describe("resolveRouteAccess", () => {
   it("allows public routes without a session", () => {
-    expect(resolveRouteAccess("/login", null)).toBe("allow");
-    expect(resolveRouteAccess("/api/auth/signin", null)).toBe("allow");
+    expect(resolveRouteAccess("/login", false)).toBe("allow");
+    expect(resolveRouteAccess("/api/auth/signin", false)).toBe("allow");
+    expect(resolveRouteAccess("/_next/static/chunk.js", false)).toBe("allow");
   });
 
-  it("redirects to login when no session on protected route", () => {
-    expect(resolveRouteAccess("/foster", null)).toBe("redirect-login");
-    expect(resolveRouteAccess("/admin", null)).toBe("redirect-login");
+  it("redirects to login when no session on /foster", () => {
+    expect(resolveRouteAccess("/foster", false)).toBe("redirect-login");
   });
 
-  it("allows FOSTER role on /foster", () => {
-    expect(resolveRouteAccess("/foster", ["FOSTER"])).toBe("allow");
+  it("redirects to login when no session on /admin", () => {
+    expect(resolveRouteAccess("/admin", false)).toBe("redirect-login");
   });
 
-  it("allows ADMIN role on /foster", () => {
-    expect(resolveRouteAccess("/foster", ["ADMIN"])).toBe("allow");
+  it("allows /foster with a session", () => {
+    expect(resolveRouteAccess("/foster", true)).toBe("allow");
   });
 
-  it("denies VOLUNTEER role on /foster", () => {
-    expect(resolveRouteAccess("/foster", ["VOLUNTEER"])).toBe("redirect-login");
+  it("allows /admin with a session", () => {
+    expect(resolveRouteAccess("/admin", true)).toBe("allow");
   });
 
-  it("allows ADMIN role on /admin", () => {
-    expect(resolveRouteAccess("/admin", ["ADMIN"])).toBe("allow");
-  });
-
-  it("denies FOSTER role on /admin", () => {
-    expect(resolveRouteAccess("/admin", ["FOSTER"])).toBe("redirect-login");
+  it("allows unprotected routes without a session", () => {
+    expect(resolveRouteAccess("/", false)).toBe("allow");
+    expect(resolveRouteAccess("/about", false)).toBe("allow");
   });
 });
