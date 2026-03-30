@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(export PATH=\"/c/Program Files/nodejs:$PATH\")",
+      "Bash(npx create-next-app@latest ../chunky-temp --typescript --tailwind --eslint --app --src-dir --no-import-alias)",
+      "Bash(# Copy everything except .git, node_modules, .next, CLAUDE.md \\(we have our own\\), and README.md\ncp /c/Projects/chunky-temp/.gitignore /c/Projects/ChunkyNorris/\ncp /c/Projects/chunky-temp/AGENTS.md /c/Projects/ChunkyNorris/\ncp /c/Projects/chunky-temp/eslint.config.mjs /c/Projects/ChunkyNorris/\ncp /c/Projects/chunky-temp/next-env.d.ts /c/Projects/ChunkyNorris/\ncp /c/Projects/chunky-temp/next.config.ts /c/Projects/ChunkyNorris/\ncp /c/Projects/chunky-temp/package.json /c/Projects/ChunkyNorris/\ncp /c/Projects/chunky-temp/package-lock.json /c/Projects/ChunkyNorris/\ncp /c/Projects/chunky-temp/postcss.config.mjs /c/Projects/ChunkyNorris/\ncp /c/Projects/chunky-temp/tsconfig.json /c/Projects/ChunkyNorris/\ncp -r /c/Projects/chunky-temp/public /c/Projects/ChunkyNorris/\ncp -r /c/Projects/chunky-temp/src /c/Projects/ChunkyNorris/\necho \"Done copying files\")",
+      "Skill(update-config)",
+      "Bash(powershell.exe -Command \"\n\\\\$nodePath = 'C:\\\\Program Files\\\\nodejs'\n\\\\$current = [Environment]::GetEnvironmentVariable\\('PATH', 'Machine'\\)\nif \\(\\\\$current -like \\\\\"*\\\\$nodePath*\\\\\"\\) {\n    Write-Host 'Already in system PATH'\n} else {\n    [Environment]::SetEnvironmentVariable\\('PATH', \\\\\"\\\\$current;\\\\$nodePath\\\\\", 'Machine'\\)\n    Write-Host 'Added to system PATH'\n}\n\")",
+      "Bash(npm install:*)",
+      "Read(//usr/local/bin/**)",
+      "Bash(echo \"checking PATH: $PATH\")",
+      "Read(//c/Program Files/nodejs//**)",
+      "Read(//c/Users/Administrator/AppData/Roaming/**)",
+      "Read(//c/Program Files \\(x86\\)/**)",
+      "Bash(export PATH=\"$PATH:/c/Program Files/nodejs\")",
+      "Bash(export PATH=\"$PATH:/c/Program Files/PostgreSQL/17/bin:/c/Program Files/PostgreSQL/16/bin:/c/Program Files/PostgreSQL/15/bin\")",
+      "Bash(psql --version)",
+      "Bash(export PATH=\"$PATH:/c/Program Files/PostgreSQL/18/bin\")",
+      "Bash(PGPASSWORD=chunky123 psql -U postgres -c \"CREATE DATABASE chunkynorris;\")",
+      "Bash(npx prisma:*)",
+      "Bash(npm pkg:*)",
+      "Bash(npm test:*)",
+      "Bash(find C:/Projects/ChunkyNorris -name *.jsx -o -name *prototype* -o -name *foster-app*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx next:*)"
+    ]
+  }
+}

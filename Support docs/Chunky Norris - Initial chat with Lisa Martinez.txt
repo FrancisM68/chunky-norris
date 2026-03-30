@@ -1,0 +1,794 @@
+Chunky Norris – The Pet Rescuer App
+Call with Lisa Martinez from DAR – Drogheda Animal Rescue
+Rescue data management and tracking application planning Lisa call with Francisco – Granola notetaker app’s Notes
+Mon, 23 Feb 26
+Current Data Management System & Challenges
+Data Fields Currently Tracked
+* Animal intake information:
+o Intake date and departure date
+o Source classification (stray, surrender, TNR)
+o Gender, age, coat type and color
+o Foster placement details and location
+* Medical tracking:
+o Vaccination dates and neutering dates
+o FIV/FELV testing results (cats only)
+o Basic medication notes (incomplete)
+* Outcome documentation:
+o Rehomed, reclaimed, euthanized, or died in care
+o Adopter handoff information including medical history
+Process Gaps & Volunteer Adoption Issues
+* Excel-based system creates bottlenecks
+o Only Lisa and Rafael consistently use shared TNR spreadsheet
+o 2 out of 4 volunteers actively input data
+o Other volunteers avoid technology due to unfamiliarity
+* Foster medication tracking failures:
+o Fosters should write treatments in notebooks but often forget
+o “I’ll do it later” mentality leads to lost information
+o No standardized process for capturing foster-administered medications
+* Data input resistance factors:
+o Limited patience with technology problems
+o Unwillingness to troubleshoot application issues
+o Time constraints and competing priorities
+Compliance Risks
+* Department of Agriculture annual grant review identified medication control as primary weakness
+* Missing documentation for animals in foster care
+* Inadequate home check records for dog adoptions
+* Separate TNR tracking required but underutilized
+Department of Agriculture Requirements
+Mandatory Documentation Standards
+* Medication administration tracking must include:
+o Specific medication administered (e.g., deworming medication name)
+o Dosage and administration date
+o Person who administered treatment
+o Animal weight at time of treatment
+* Foster care oversight:
+o Complete medication logs for all treatments (cat flu, dewormings, flea treatments)
+o Documentation must be available for adopter handoff
+* Home check documentation:
+o Physical property inspection results
+o 35-question assessment responses
+o Garden/outdoor space evaluation for dogs
+Reporting & Export Needs
+* Annual statistics compilation required
+* CSV export capability essential for data manipulation
+* Specific instance documentation for audit purposes
+* Mortality tracking (euthanized vs. natural death)
+Proposed Application Architecture
+Dual Interface Design
+* Admin dashboard for Francisco:
+o Excel-like bulk data entry capabilities
+o Complete animal record management
+o Reporting and export functions
+* Mobile foster interface:
+o Simplified medication logging
+o Species-specific field loading
+o Minimal steps for quick entry
+Proposed Features
+* Dynamic form generation based on animal species
+* Photo attachment capabilities for medical records
+* Phone-based data entry during conversations
+* Shared drive integration for volunteer access
+* Home check digitization with mobile forms
+* Automated field population (e.g., FIV/FELV for cats only)
+User Roles & Journeys
+Admin User (Francisco)
+1. Bulk data entry from volunteer notes/calls
+2. Generate compliance reports for Department of Agriculture
+3. Export data to CSV for grant applications
+4. Manage foster assignments and animal placements
+5. Review and validate volunteer-entered data
+Foster/Volunteer User
+1. Receive animal assignment with mobile app link
+2. Log medications using simple form (pet name + treatment details)
+3. Upload photos of treatments or medical notes
+4. Submit data with minimal technical barriers
+5. Access animal history for adopter handoff
+Home Check Inspector
+1. Access digital questionnaire on mobile device
+2. Complete 35-question assessment during visit
+3. Document garden/property observations
+4. Submit results for Department of Agriculture compliance
+Requirements Backlog
+P1 (Critical - Department of Agriculture Compliance)
+* Medication tracking system
+o Acceptance criteria: Capture medication, dosage, date, administrator
+o Risk: Grant funding dependent on compliance
+* Foster mobile interface
+o Acceptance criteria: <3 steps to log treatment
+o Risk: Volunteer adoption failure without simplicity
+* CSV export functionality
+o Acceptance criteria: All data exportable for reporting
+o Risk: Manual reporting creates compliance gaps
+P2 (High - Operational Efficiency)
+* Home check digitization
+o Acceptance criteria: Replace 35-question email process
+o Risk: Current process adequate but inefficient
+* Species-specific field loading
+o Acceptance criteria: Automatic FIV/FELV fields for cats
+o Risk: User confusion without proper field management
+* Photo attachment capabilities
+o Acceptance criteria: Support medical documentation photos
+o Risk: Storage costs and data management complexity
+P3 (Medium - Enhanced Features)
+* Bulk data entry from phone conversations
+o Acceptance criteria: Admin can input during calls
+o Risk: Feature complexity may delay core functionality
+* TNR workflow separation
+o Acceptance criteria: Dedicated feral cat tracking
+o Risk: Workflow duplication if not properly integrated
+Metrics & Success Criteria
+Adoption Metrics
+* Volunteer data entry participation rate >75%
+* Foster medication logging compliance >90%
+* Time reduction in Francisco’s data entry workload >50%
+Compliance Metrics
+* 100% medication tracking for animals in care
+* Complete home check documentation for all dog adoptions
+* Successful Department of Agriculture audit with no data gaps
+Open Questions & Dependencies
+Technical Dependencies
+* Integration requirements with existing shared drives
+* Mobile app development timeline and platform selection
+* Data migration strategy from current Excel spreadsheets
+Process Dependencies
+* Volunteer training requirements for new system
+* Department of Agriculture documentation review needed
+* Monday.com evaluation as potential alternative solution
+Outstanding Questions
+* Specific medication fields required beyond basic tracking
+* Home check questionnaire digitization priority vs. custom development
+* Data retention requirements and backup strategies
+* Multi-rescue solution scalability for future commercial offering
+Next Steps
+* Wednesday morning meeting scheduled for detailed requirements review
+* Francisco to provide:
+o Current Excel spreadsheet examples (cats + TNR)
+o Department of Agriculture documentation requirements
+o Monday.com access for competitive analysis
+* Technical evaluation of existing solutions vs. custom development
+* Volunteer skill assessment and training needs analysis
+
+Chat with meeting transcript: https://notes.granola.ai/t/cda82f9c-cb24-4798-a31b-b7d1bb02cc16-00demib2
+
+
+Rescue data management and tracking application planning Lisa call with Francisco – Granola notetaker app’s Transcript (for further understanding and possible capture of missed information)
+Callers: 
+Lisa Martinez – DAR volunteer and in charge of operational coordination of the rescue
+Me, Francisco Martins (aka Frankie) – I’m a volunteer with DAR as well, as fosterer and in donations runs
+Transcript:
+Meeting Title: Rescue data management and tracking application planning with Francisco
+Date: Feb 23
+
+Transcript:
+ 
+Them: She would need to sit down and discuss  
+Me: Need to sit down discuss  
+Them: the areas in Dharr that that actually need more coverage and focus  
+Me: the areas that are that that actually need more coverage and focus  
+Them: and improvement, and there are plenty.  
+Me: and improvement, and there are plenty.  
+Them: So but, also,  
+Me: Mhmm. So but, also,  
+Them: I have another task to do. I need to I need to find a new treasure  
+Me: I have another task to do. I need to I need to find a new treasure  
+Them: for Dar because our current treasurer will be  
+Me: for our because our current treasure will be  
+Them: I think, moving over to The UK for studies,  
+Me: I think, moving over to The UK for studies,  
+Them: probably starting September. So we discussed this at our last  
+Me: Mhmm. Probably starting September. So we discussed this at our last board meeting. So we need I need to  
+Them: board meeting. So we need I need to start looking for a new treasure as well. So  
+Me: start looking for a new treasure Mhmm. As well. So  
+Them: but there's a lot of other things that need to be done.  
+Me: there's a lot of other things that need to be done.  
+Them: And it might be easier for me to sit with you and kinda discuss  
+Me: It might be easier for me to sit with you and kinda discuss  
+Them: what areas you feel that you can contribute, that you have a skill set in  
+Me: what areas you feel that you can contribute, that you have a skill set in  
+Them: and have the time to to do to cover.  
+Me: Mhmm. Have the time to to do to cover. Mhmm. Yeah. I'm totally open to that. What I've what I was talking about here is actually developing an an application. Right? Would help you or would help anyone involved with the rescue. Right? With day to day stuff,  
+Them: Yeah.  
+Me: and and then the the longer term stuff as well. Okay? Yeah. Yeah.  
+Them: Yeah. Yeah. Two two two  
+Me: So because what I was asking is, for instance, what are you managing right now new rescues that that you that you get, the information around them, it's  
+Them: Yeah.  
+Me: where where you place them, what's their current status in terms of treatments, etcetera, all of that. How are you doing that?  
+Them: Yeah. Yeah. Yeah. So so  
+Me: Yeah. So so  
+Them: yeah, that's a that's a that's a that's a very good question.  
+Me: yeah, that's a that's a that's that's a very good question.  
+Them: And it's it's one that  
+Me: And it's it's one that is a is a is an issue for all  
+Them: is a is a is an issue for all SKUs, and that is sort of data management of  
+Me: SKUs, and that is sort of data management of  
+Them: animals. And, I was  
+Me: animals. Mhmm. And I was  
+Them: just  
+Me: just yeah. I was just speaking with Noah about a couple of  
+Them: yeah, I was just speaking with them about a couple of about three weeks ago, I was speaking with another  
+Me: about three weeks ago, I was speaking with another rescue Last Hope Animal Charity. And  
+Them: Last Hope Animal Charity. And, to get an idea how do they track their  
+Me: to get an idea how do they track their  
+Them: medication and stuff administered to all the animals in their care.  
+Me: medication and stuff administered to all of the animals in their care.  
+Them: And they use  
+Me: And they use  
+Them: they use this app called mondaymonday.com Now I started to play around with it.  
+Me: they use this app called mondaymonday.com. Mhmm. Now I started to play around with it.  
+Them: I haven't really I haven't really  
+Me: I haven't really I really  
+Them: I haven't fully embedded myself in it yet. But, basically, it's  
+Me: I haven't fully embedded myself in it yet. Basically, it's pretty much allows you to set up fields and  
+Them: pretty much allows you to set up fields and and columns and  
+Me: and columns and stuff to input information, and you could  
+Them: stuff to input information, and you could attach  
+Me: attach Uh-huh. Photos and other stuff into it.  
+Them: you know, photos and other stuff into it. Now  
+Me: Now that's all well and good.  
+Them: that's all well and good. But the problem is, and even the  
+Me: But the problem is, and even the other rescue said, the problem is  
+Them: the other rescue said, the problem is  
+Me: the users, the volunteers,  
+Them: the, users, the Some volunteers are just really  
+Me: Mhmm. Some volunteers are just really  
+Them: they're not  
+Me: they're not they're not  
+Them: they're not kind of on board with, you know, doing things like that to  
+Me: kind of on board with, you know, doing things like that and putting stuff.  
+Them: and putting stuff. So there's a bit of resistance from  
+Me: So there's a bit of resistance from volunteers their willingness and ability to input data.  
+Them: volunteers, their willingness and ability to input data. Now that's  
+Me: Now that's a big problem across the board. So  
+Them: a big problem across the board. So because at the moment now, I have  
+Me: because at the moment now, I have I have  
+Them: I have spreadsheets where I track all the animals.  
+Me: spreadsheets where I check all of the animals Mhmm. That come into the rescue  
+Them: That come into the rescue.  
+Me: And, you know, so and and just capturing critical  
+Them: And, you know, so and and just capturing critical stuff like  
+Me: stuff like for example, and I probably need to show you what I have.  
+Them: for example, and I probably need to show you what I have. But just capturing, like, in intake date,  
+Me: But just capturing, like, in intake date, date they left,  
+Them: date they left, source of the animal, whether it's a stray,  
+Me: source of the animal, whether it's a stray or  
+Them: or if it's a surrender or if it's a  
+Me: it's a surrender or if it's a TNR.  
+Them: TNR. And then, also, you know, the gender  
+Me: And then, also, you know, the gender  
+Them: you know, the age, the coat  
+Me: Mhmm. You know, the age, the coats  
+Them: type and color of the animal,  
+Me: type, color of the animal.  
+Them: and, vaccination dates, neutering dates,  
+Me: And vaccination dates, neutering dates.  
+Them: if they had FIV, FELV testing and the outcome of that.  
+Me: If they had FIV, FVLV testing and the outcome of that,  
+Them: And then day that they were left the rescue, whether they were rehomed or  
+Me: And then day that they were left, the was that they were reho or claimed,  
+Them: reclaimed or they were put to sleep or they they passed away in our care.  
+Me: or they were put to sleep or they they passed away in our care.  
+Them: And then some notes, but I'd really prefer to show you that  
+Me: And then some notes, but I'd really prefer to show you that  
+Them: I could I could eat I could and it's a laborious task.  
+Me: Mhmm. I could I could eat. I could because and it's a laborious task. And  
+Them: And because  
+Me: because  
+Them: I get inputs from a few volunteers, including myself,  
+Me: I get inputs from a few volunteers, including myself,  
+Them: about this information, and I input it in. Now it's I I mind  
+Me: about this information, and I input it in. Now it's I I mind  
+Them: you know, because I, you know, because I I could use Excel without any any problems.  
+Me: know, because I you know, because I I could use Excel if there are any any problems.  
+Them: And Rafael, you met Rafael,  
+Me: And Rafael, you meant Rafael. Mhmm. He he's very good. I have a separate TNR  
+Them: he he's very good. I have a separate TNR spreadsheet that's on a shared drive, and he's very good at inputting stuff because  
+Me: that's on a shared drive. And he's very good at inputting stuff because, you know, he's he's not  
+Them: you know, he's he's not used to dealing with  
+Me: he's he's used to dealing with, you know,  
+Them: spreadsheets and all that stuff. But I have other volunteers who won't bother because they don't they don't  
+Me: spreadsheets and stuff. But I have other volunteers who won't bother because they don't they don't they don't they're not familiar with it, so they don't like to  
+Them: they don't they're not familiar with it, so they don't like to  
+Me: try and use it. So that kind of then just puts a lot of  
+Them: try and use it. So that kind of then just puts a lot of workload on me to input their information.  
+Me: workload on me to input their information.  
+Them: But I could I could run through those with you, and you can see  
+Me: But I could I could run through those with you Mhmm. And you can see what information is captured.  
+Them: what information is captured. But the one area that we're falling back  
+Me: But the one area that we're calling to grab on, and this was pointed out  
+Them: on, and this was pointed out by the Department of Agriculture,  
+Me: by the Department of Agriculture when we had our last  
+Them: when we had our last interview for our annual grant.  
+Me: interview for our annual grant is  
+Them: Is the administration of medication for  
+Me: the administration of medication for  
+Them: the animals in our care.  
+Me: the animals in our care. Mhmm.  
+Them: Like like if a foster takes  
+Me: Like like, if a foster takes  
+Them: if a foster takes, say, a cat  
+Me: if a foster takes, say, a cat  
+Them: on board and they're have medication for, say, cat flu or whatever,  
+Me: on board and they're have medication for, say, cat flu or whatever Mhmm.  
+Them: all of that has to be captured somewhere.  
+Me: All of that has to be captured somewhere. Mhmm. And  
+Them: And it  
+Me: it  
+Them: I'd say I'd say most of the time,  
+Me: I'd say I'd say most of the time, isn't.  
+Them: isn't. So the the primary agriculture would like to  
+Me: So the the part of your culture would like to  
+Them: see something that we we have where we  
+Me: see something that we we have where we  
+Them: captured information as to what was administered to the animal  
+Me: captured information as to what was administered to the animal  
+Them: when it was administered, and who administered it.  
+Me: when it was administered, and who administered it. Uh-huh.  
+Them: So kind of like that gave you for the warming.  
+Me: So kind of like that. Yeah. Gave you for the army.  
+Them: Right? So that kinda captures  
+Me: Mhmm. Right? So that kinda captures when the warmer was given, how much was given, and  
+Them: when the warmer was given, how much was given, and you know, which animal it was given to, etcetera.  
+Me: which animal was given to, etcetera.  
+Them: So they wanna see that information, but that but that's a lot. You know? So  
+Me: Mhmm. So they wanna see that information, but that but that's a lot. You know? So  
+Them: ideally, there should be an application where  
+Me: ideally, there should be an application where  
+Them: users can put in in  
+Me: users can put in in  
+Them: is it's do this. Do they wanna take the time  
+Me: is to do this. Do they wanna take the time? Mhmm. Are they  
+Them: Are they, not I don't wanna find I wanna find a better word for being not  
+Me: not I don't wanna find I wanna find a better word for me, not tech savvy. They just  
+Them: tech savvy. They just are  
+Me: are Yeah. There there's a limit to what to  
+Them: wary of it. They wouldn't  
+Me: a a volunteer wants to wants to commit in terms of time. But the the that's percent just to  
+Them: well, it's more than time. It's just a yeah. It's a willingness to do it. They don't they are not  
+Me: yeah, the willingness to do it. They don't they're not  
+Them: patients. And you know yourself, like, if you run into a problem on  
+Me: patients. And you know yourself, like, if you run into a problem on  
+Them: an application, you'll sit there and figure out  
+Me: an application Uh-huh. You'll sit there and figure out.  
+Them: out, right, how how how to do it. But but we have volunteers who  
+Me: Right, how how to do it. But but we have volunteers who  
+Them: won't do that.  
+Me: won't do that. Mhmm.  
+Them: They think there's gremlins  
+Me: Yeah. That's that's precisely my my idea.  
+Them: in their computer.  
+Me: Computer. Yeah. My my so my idea my idea would be to have, basically, two different interfaces for for the whole thing. Right? So one admin view that you would have and in which you could input  
+Them: Because we have so  
+Me: information yourself just like if it was an Excel or  
+Them: Yeah.  
+Me: something. Right? Yeah. But for instance, if you when you enroll a foster, you you you give them a link to an application that they put on the phone. Right? And when on the phone Yeah. You just you just have okay.  
+Them: Yeah.  
+Me: Pet now. Pet name, x and then, and then, we just input the fields  
+Them: Yep.  
+Me: that we need from them on the on as quick as possible. And as simple as possible. Right? So to make and and explain And then if you explain to the foster that, in fact, for us to be approved by department of agriculture, etcetera, and to be supported, we need to have that. Right? It's something if we're if we're if we're doing a  
+Them: Yeah. Yep.  
+Me: if we if we're giving a deworming or something, it's not that hard. Right? Yeah. For me, at times, it was it was, time consuming because there were six Right? So Yeah. Weighing them all and then  
+Them: Yep.  
+Me: them all, etcetera. But it's something if you're taking care of one or two pets, it's it's something that I wanted to to be easy and to be just on the screen on a on the on the phone.  
+Them: Yeah.  
+Me: That they could Yeah. Just do it quickly.  
+Them: Yeah. So, yeah, so  
+Me: Right? Yeah. So, yeah, so I I hope so. I mean, it it is  
+Them: I I hope so. I mean, it's it is it is case where we have  
+Me: it is case where we have volunteers who are looking after more than  
+Them: volunteers who are looking after more than one animal  
+Me: one animal, more than two animals worth three or four or five. Mhmm.  
+Them: more than two animals, more than three or four or five. So they have quite a few.  
+Me: They have quite a few.  
+Them: So  
+Me: Yeah. But they're not but maybe they're not doing everything at the same time.  
+Them: No. They're not, but they  
+Me: Right? Or or or all of them at the same time? No.  
+Them: no. No. No. But they may have, say, for example,  
+Me: No. But they may have, say, for example,  
+Them: they may have, you know, that  
+Me: they may have, you know, that  
+Them: say, you know, when within a week, they may have  
+Me: say, you know, one within a week, they may have cats that have cat flus till the  
+Them: cats that have cat flu, so they have to administer medication.  
+Me: administer medication, cats that need their vaccinations. Mhmm. Cats that go in for neutering.  
+Them: Cats that need their vaccinations. Cats that go in for neutering. So  
+Me: So it's a busy enough. It may not be every single  
+Them: it's busy enough. It may not be every single day, but they have enough enough  
+Me: day, but they have enough enough  
+Them: enough going on in a week's time.  
+Me: enough going on in a week's time. So the the problem is is they're  
+Them: So the the problem is is their their ability and their willingness  
+Me: their ability and their willingness to input data. That's that's  
+Them: to input data. That's that's the problem, and that's  
+Me: problem, and that's the problem for a lot of rescues. Mhmm.  
+Them: the problem for a lot of rescues that there's not a willingness  
+Me: That there's not a willingness to do that. Now last hope animal charity is a chief of who  
+Them: to do that. Now Last Hope Animal Charity. The chap who who is  
+Me: who is is he has kind of  
+Them: is he's kind of not developed, but he kind of  
+Me: not developed, but he kind of tailored this this particular  
+Them: tailored this this particular app, for the rescue. He said that that  
+Me: app for the rescue. He said that that they have somebody who will input  
+Them: they have somebody who will input the data for the  
+Me: the data for them because they have volunteers who just don't wanna just  
+Them: them because they have volunteers who just don't wanna just don't wanna be bothered.  
+Me: don't wanna be bothered, but they need to capture it. So there's somebody  
+Them: But they need to capture it. So there's somebody allocated with  
+Me: allocated with  
+Them: gathering this information from, say, Foster or other volunteers and and and putting it into the application.  
+Me: gathering this information from, say, foster Uh-huh. Other volunteers, and it and putting it into the application. Mhmm. That's why that's why I was saying having the two interfaces. Right? So if the phosphorus is not, inputting it themselves, then you could go into the app and and and do it in sort of bulk. Right? You have notes or they give you notes, etcetera.  
+Them: Yeah. Yeah.  
+Me: Or, ultimately, you can be on the phone.  
+Them: Yeah. Yeah. So  
+Me: Yeah, yeah. Right? And and you you yourself log that during the conversation because someone is talking to you and saying, yes. So, Snoopy. I just weighed her four kilos, and I gave her now the the the deworming with the Medicinex.  
+Them: Yeah.  
+Me: Right? And you can just put that quickly into the into the system.  
+Them: Yeah.  
+Me: Or Yeah. You can take notes of that and then put it in bulk on a like  
+Them: Well, exactly. Exactly. Now now  
+Me: input. Well, exactly exactly. Now that now  
+Them: now each of the  
+Me: now each of the  
+Them: each of the main volunteers who are managing cats, they should be  
+Me: each of the main volunteers fosters who are managing cats, they should be  
+Them: capturing this data in a notebook as to the intake date,  
+Me: capturing this data in a notebook as to the intake date,  
+Them: and that you know, what type of cat it is,  
+Me: and that you know, what type of cat it is,  
+Them: what medication was given. All this information, they should be capped  
+Me: what medication was given, all this information they should be capturing this, say, writing it down Mhmm. Is is is enough  
+Them: this, say, just writing it down is is is enough to to capture, and then that could be then put into a spreadsheet or whatever.  
+Me: to to capture, then that could be then put into a spread heet or whatever. But you you know yourself. You have somebody  
+Them: But, you you know yourself. If you have somebody who takes in a cat, this is I'll do it later.  
+Me: who takes in a cat, this is I'll do it later.  
+Them: And they don't do it, so that information is lost.  
+Me: And they don't do it. So that information is lost. Mhmm. So at the at the bare minimum, they should be at least be writing this down  
+Them: So at at the bare minimum, they should be at least be writing this down in in a diary  
+Me: in in a diary on intake.  
+Them: on intake about these  
+Me: About these animals, and then to think that we could input it later  
+Them: and then they could we could input it later. So so that's kind of the  
+Me: So so that's kind of the struggles, but  
+Them: struggles. But what I'll do is I will I will send you the link for  
+Me: what I'll do is I will I will send you the link for  
+Them: that monday.com, which  
+Me: that monday.com, which Mhmm. Is was was  
+Them: is was was suggested, recommended by another rescue.  
+Me: suggested, recommended by another rescue.  
+Them: And you could take a look at that and see if that is  
+Me: And you could take a look at that and see if that is  
+Them: if that is something that  
+Me: if that is something that  
+Them: you can you can either build a better one that's tailored to  
+Me: you can you can either build a better one Mhmm. That's tailored to to to the rest  
+Them: To to the rescue,  
+Me: Mhmm. But I'd like to sit down and kinda go through  
+Them: But I'd like to sit down and kinda go through what information we need to capture. Now some people  
+Me: what information we need to capture. Mhmm. Now some people  
+Them: think  
+Me: think  
+Them: you know, I'm a pain by asking all this information of them, but in reality,  
+Me: you know, I'm a pain by asking all this information of them. But in reality,  
+Them: the Department of Agriculture looks at it.  
+Me: the Department of looks at it.  
+Them: They look at  
+Me: Mhmm. They look at  
+Them: they want to see  
+Me: want to see if we have a cat, they wanna see who what the we  
+Them: we have a cat, they wanna see who what the we want they wanna see  
+Me: wanna see the fosters details of where that cat animal is.  
+Them: the fosters details of where that animal is. So I capture that as well. But,  
+Me: Mhmm. So I capture that as well. But and then they wanna see how many cats die  
+Them: then they wanna see how many cats died or put to sleep.  
+Me: or put to sleep. So they they wanna see all of that information.  
+Them: So they they wanna see all of that information. So  
+Me: So I'm I'm not the believer that you capture  
+Them: I'm I'm of the believer that you capture I'd say, important relevant information even if it's not  
+Me: I'd say, important relevant information even if it's not  
+Them: necessarily used, but we use but I use all of it.  
+Me: necessarily used, but we but I use all of it.  
+Them: And even on the adoption forms,  
+Me: And even on the adoption forms of  
+Them: we need to at least let the new new adopter new adopter of the new  
+Me: we need to at least let the new new adopter new of the new new cat know when this cat was warned  
+Them: new cat know when this cat was wormed, what it was wormed with,  
+Me: Mhmm. What it was wormed with. So they have that information  
+Them: So they have that information  
+Me: Yeah. In front of them. Mhmm. So so that's where I would  
+Them: in front of them. So so that's where I would then rely on that information given to me by the fosters  
+Me: then rely on that information given to me by the fosters.  
+Them: you know, when when when the animals were wormed or  
+Me: You know, when when when the animals were wormed or  
+Them: or given flea treatments or whatever,  
+Me: ever given flea treatments or whatever. Mhmm. So oh,  
+Them: So  
+Me: yeah. Let me know.  
+Them: yeah, let me know let me know when you have time, and I could  
+Me: Let me know when you have time, and I could drop by  
+Them: drop by. And  
+Me: And Mhmm. I could bring my I could I could probably you have a laptop there. Do you Yeah. I have  
+Them: I could bring my I could I could probably you have a laptop there, do you? Because my laptop  
+Me: laptop is my laptop is very old, and it's dying. And  
+Them: is my laptop is very old, and it's dying. And so I could just put everything on a fob and bring it to you.  
+Me: so I could just put everything on a hob Mhmm. And bring it to you. Mhmm. Okay. And  
+Them: And and and show you what what a cup  
+Me: and and show you what what I capture and why I capture it  
+Them: and why I capture it and where it's used.  
+Me: and where it's used Mhmm. And the whole process  
+Them: And the whole process. But that's one of the areas where  
+Me: But that's one of the areas where we need to tighten up on. Uh-huh. It's  
+Them: we need to tighten up on. It's it's basically comes under the control of medications.  
+Me: it's basically comes into the control of medications.  
+Them: Of, you know, animals that are in our charge.  
+Me: Of, you know, animals that that are in our charge. Uh-huh.  
+Them: Now, also,  
+Me: Now, also,  
+Them: another another thing that we do need and  
+Me: another another thing that we do need and is an app. And and I know the  
+Them: is an app. And and I know the there there is somebody that has one, like,  
+Me: there is somebody that has one, like, you know, it's easily done.  
+Them: you know, it's easily done. It's it's easy to do. I you know, you can do it in in  
+Me: It's it's easy to do. I you know, you can do it in in in what is it called?  
+Them: in what is it called? Google Google Docs or something like that. You can make up a form  
+Me: Google Google Docs or something like that. You can make up a form  
+Them: But what what what it's needed for is for the home checks  
+Me: Mhmm. Google Forms. Yep. What it's needed for is for the home check  
+Them: mainly for the dogs.  
+Me: mainly for the dogs.  
+Them: Okay? So it's basically capturing  
+Me: Okay? So it's basically capturing  
+Them: information about a home check that is done for a dog.  
+Me: information about a home check that is done for a dog.  
+Them: And you then you input your responses. Now  
+Me: And you then you input your responses. Mhmm. Now  
+Them: yeah. So so that needs to be done  
+Me: yeah. So so that needs to be done.  
+Them: because at the moment, we I just have a, like, a 35 questionnaire  
+Me: Because at the moment, we I just have a like, a 35 questionnaire Mhmm. That I email out  
+Them: that I email out to people for dogs. And then  
+Me: people for dogs. Mhmm. And then I do the home check, but a lot of it  
+Them: I do the home check, but a lot of it the terms of but the Farm culture one to see  
+Me: but the farm bearing culture wants to see  
+Them: the the responses to the home check.  
+Me: the the responses to the home check.  
+Them: What did you find and whatever for dogs?  
+Me: What did you find and whatever Mhmm. For dogs.  
+Them: Not so much for cats, I don't think, but  
+Me: Not so much for cats, I don't think, but  
+Them: it's kinda getting there. But for the dogs, they definitely wanna see what the  
+Me: it's kinda getting there. But for the dogs, it definitely wanna see what the outcome of a home check is, which is a physical home check of the garden.  
+Them: outcome of a home check is, which is a physical home check of the garden. And stuff. So that's  
+Me: Mhmm. And stuff. So that's so we have something we have something quite  
+Them: so we have something we have something quite basic, but it's too basic. It  
+Me: basic, but it's too basic. Mhmm. It it  
+Them: if we can do something on an app, it would be heck of a lot easier.  
+Me: if we could do something on the app, it would be a easier.  
+Them: Where we can access  
+Me: Where we can access the  
+Them: results.  
+Me: the results. Mhmm. Yeah. And Then we The thing is  
+Them: And then we can show it to the primary agriculture.  
+Me: full full disclosure, obviously. These for DART, it would be pro bono and and working for for us to to understand. What we need and and to help to help, with this. But ultimately, what might come out of this is actually build a a solution that can be sold for symbolic price to to rescues throughout the country. Right? Yeah. Yeah. Yeah.  
+Them: Yeah. Yeah. Yeah. You can  
+Me: You can yeah.  
+Them: yeah. Yeah. I I suppose  
+Me: Yeah. I I suppose as I said, there are apps  
+Them: the as I said, there are apps out there already.  
+Me: out there already Mhmm. That that are  
+Them: That that are kind of  
+Me: kind of  
+Them: their framework is is is  
+Me: their frame framework is is is is  
+Them: you know, you you can build your own  
+Me: know, you you can build your own, like, columns and rows and whatever.  
+Them: like, columns and rows and whatever and input stuff.  
+Me: And input stuff. So there there's apps already  
+Them: So there there's apps already out there, and pee and rescues do use them.  
+Me: out there, and peep and rescues do use them. Mhmm.  
+Them: Now every rescue does things differently.  
+Me: Now every rescue does things differently.  
+Them: That's the problem. There's no necessarily, there's no  
+Me: That's the problem. There's no necessarily there's no  
+Them: sort of continuity across the rescues. That's  
+Me: sort of continuity across the rescue. So  
+Them: one of the problems. But  
+Me: one of the problems. But  
+Them: I think the main thing is capturing information  
+Me: I think the main thing is capturing information  
+Them: about the animals that come into your care.  
+Me: about the animals that come into your care Mhmm. Including  
+Them: Including medication, what come what what happens to them.  
+Me: medication, what come what what happens to them.  
+Them: Has always been a challenge. And  
+Me: Has always been a challenge.  
+Them: that's what we we need to do. So I can show you what we do.  
+Me: That's what we we need to do. So I can show you what we do. Mhmm. And it's not again, it's  
+Them: And it's not and, again, it's the information is only good as the input.  
+Me: the information is only good as the input, but I can show you what we do.  
+Them: But I can show you what we do, and and I can I can tell you what  
+Me: And and I can tell you what you know, where the market  
+Them: you know, where are the challenges of getting this information?  
+Me: challenges of getting this information. Mhmm. And then you can kinda think, alright. What what's  
+Them: And then you can kinda think, alright. What what's the best  
+Me: the best  
+Them: thing to do  
+Me: thing to do? Mhmm. You know, for for people  
+Them: you know, for for people of different of different sort of  
+Me: of different of different sort of  
+Them: experienced backgrounds in using, you know, any form of technology.  
+Me: experienced backgrounds in using, you know, any form of technology. Mhmm.  
+Them: To to do this. Now as I said, I I just put on a  
+Me: To to do this. Now as I said, I I just put on a  
+Them: I made it a a a TNR  
+Me: I made it a a a TNR  
+Them: Excel spreadsheet and put it on shared drive for for those  
+Me: Excel spreadsheet and put it on shared drive for for those volunteers.  
+Them: volunteers who do TNR.  
+Me: Who do TNR.  
+Them: And I sent it out to them, and now it's pretty self explanatory.  
+Me: And I sent it out to them, and now it's pretty soft explanatory.  
+Them: Out of all out of one, two,  
+Me: But out of all out of one, two,  
+Them: three, four people,  
+Me: three, four people,  
+Them: only two people,  
+Me: only two people,  
+Them: can use it with with to use any  
+Me: can use it with with to use any  
+Them: any degree of, you know,  
+Me: any degree of, you know,  
+Them: I suppose, regularity and  
+Me: I would host regularity on  
+Them: have no problems with it. It's myself and Rafael.  
+Me: have no problems with it. It's myself and Rafael. Mhmm.  
+Them: The other volunteers who actually  
+Me: The other DNR stands for?  
+Them: pardon?  
+Me: Pardon? TNR stands for? Oh, it's oh, sorry.  
+Them: Oh, it's oh, sorry. It's it's for cats only. It's for trap, neuter, and return.  
+Me: It's for cats only. It's for trapped, neutered, and return. Ah, okay. K. Yes.  
+Them: It's for the it  
+Me: For the it's for the it's for the  
+Them: for the it's for the feral cats.  
+Me: cap. So, basically, what we did with the residents. Yeah.  
+Them: So, yeah, so I did because we have  
+Me: So yeah. So I did a We just got attached.  
+Them: a good few people doing that, I decided, well, let me just  
+Me: Good few people doing that. Mhmm. I decided, let me just and the department of agriculture would like to see the  
+Them: and the department of agriculture would like to see the the TNR of feral cats. They wanna see that information separately.  
+Me: the TNR of feral cats. They wanna see that information separately.  
+Them: So I kind of did a separate spreadsheet  
+Me: Mhmm. So I kind of did a separate spreadsheet  
+Them: for just those instances. But even then,  
+Me: for just those instances. But even then, the only ones that use it would be my would be Rafael and myself.  
+Them: the only ones that use it would be my would be Rafael and myself.  
+Me: Mhmm. It's only because we we we've used  
+Them: Only because we we've we've used Excel, you know, a lot. So we know, you know,  
+Me: Excel, you know, a lot. So we know Mhmm. You know,  
+Them: if you get get yourself into problems, you know how to figure them out, but, you know,  
+Me: You know, get get yourself into problems. You know how to figure them out, but, you know,  
+Them: So that's that's the thing. That's the problem.  
+Me: So that's that's the thing. That's the problem.  
+Them: You know, we have users  
+Me: You know, we have users  
+Them: willing to use an application because they don't know  
+Me: willing to use an application because they don't know  
+Them: They  
+Me: They  
+Them: So that's so then it comes down to me to in workload.  
+Me: So that's always then it comes down to me to work low. Mhmm. Yeah. I know I know, and I I I know well. That's why  
+Them: So  
+Me: my idea with this is to avoid the Excel, like,  
+Them: Yeah.  
+Me: as much as possible. So  
+Them: But  
+Me: help it being simple for for the for the phosphorus, etcetera, to  
+Them: Yeah.  
+Me: to fill out the the information. And as we do as steps in the fewer steps as possible.  
+Them: Well, Exactly. Exactly. So that's the  
+Me: As few steps as possible. Well, exactly. Exactly. Exactly. So that's the biggest  
+Them: biggest challenge. So maybe just kind of pick a day and a  
+Me: challenge. So maybe just kinda pick it a day and it and it  
+Them: and a time when you're available, and I'll call over. And  
+Me: time when you're available, and I'll call over. And  
+Them: you can you can go we can go through what was captured at the moment.  
+Me: you can you can go we can go through what was captured at the moment.  
+Them: The cats is the biggest problem.  
+Me: Mhmm. The cats is the biggest problem.  
+Them: Because we take in far more cats than we do dogs.  
+Me: Because we take in far more cats than we do dogs. Mhmm. And  
+Them: And so so  
+Me: so so so we can concentrate on that. We'd like to kinda keep  
+Them: so we can concentrate on that. We'd like to kinda keep the input similar, but some of the treatments are not the same. Like, we don't  
+Me: the input similar, but some of the treatments are not the same. Like, we don't  
+Them: you know, FIV, FE LV testing is just for cats.  
+Me: you know, FIV, FVLV testing is just for cats. Yeah. The but that that that's the thing that's the thing. Soon as I  
+Them: And  
+Me: for instance, that's one thing up. As soon as we put a species, right, it will load the the relevant fields  
+Them: Y  
+Me: for that species.  
+Them: Ja, okay, okay.  
+Me: Right? Yeah. Okay. So we can we can we can work with that.  
+Them: Yeah. And it  
+Me: It's not it's it's not a problem. So Yeah. Yeah. I just I just need to  
+Them: yeah. And then if some the inputs and where they come from  
+Me: where we start from. Where they go And then and from there and and from there, start start to to put together a skeleton of the  
+Them: Well, exactly. And then also, I'm gonna say something, I forgot. Yeah.  
+Me: of the app. Well, exactly. And then also, I'm gonna say something, but I forgot. Yeah.  
+Them: Oh, yeah. And the data, you should be able to  
+Me: Oh, yeah. And the data, you should be able to  
+Them: export it to a CSV file. Okay? Because that's  
+Me: export it to a CSV file. Okay? Because that's  
+Them: that's that that we can kinda then manipulate because that's  
+Me: that's that that we can kinda then manipulate because that's  
+Them: what what the because we'll need to we we need to capture numbers  
+Me: what what the because we'll need to we've we need to capture numbers for the department, and then they also wanna see particular instance  
+Them: for the department, and then they also wanna see particular instances. So  
+Me: So yeah. So Yeah. Yeah. Yeah. I mean,  
+Them: yeah, so let me let me know the  
+Me: let me know the Yeah. I would say I would say probably if you're free Wednesday morning,  
+Them: Wednesday morning. Okay. Okay.  
+Me: Wednesday morning. Okay. If it works for you if it works for you because and one of the reasons is, it's because Anya is not here, so there's a free chair.  
+Them: Okay, okay, okay.  
+Me: Okay. Okay. Okay. Yeah.  
+Them: Yeah.  
+Me: So and the and we can go we can go over the  
+Them: Okay. Yeah. No. That's  
+Me: can go over everything and have a proper discussion. But in the meantime, I can start working on on something and  
+Them: Yeah. What I'll do is I will send you a copy  
+Me: Yeah. What I'll do is I will send you a copy of  
+Them: of what I have for the cats. Now  
+Me: what I have for the cats. Now Mhmm.  
+Them: I just keep adding onto it and adding onto it and adding onto it.  
+Me: I just keep adding onto it and adding onto it and adding onto it. I know.  
+Them: Release show you the fields and information I capture.  
+Me: I know. At least show you the fields information I capture. Mhmm.  
+Them: And that's for the And then  
+Me: And that's for the cats. And then  
+Them: I'll send you the TNR. I'll just do a a copy of the TNR one.  
+Me: I'll send you the TNR. I'll just do a a copy of the TNR one.  
+Them: I'll show you that.  
+Me: I'll show you that.  
+Them: And  
+Me: And yeah. So that's  
+Them: yeah, so that's kind of one of our weak points  
+Me: kind of one of our weak points with the par with the Departure Area culture.  
+Them: with the with the Department of Agriculture and and  
+Me: And and and giving that information because they ask every year to  
+Them: and giving that information. Because they ask every year, and they say,  
+Me: say Mhmm. Where where are your records to show who  
+Them: where where are your rec to show  
+Me: Yeah. And if you have any kind of documentation from them that they sent you,  
+Them: what medication was administered? Pardon?  
+Me: or somewhere in if you have some kind of documentation that they sent you regarding that. Yeah. I'll  
+Them: Yeah. I'll have to, yeah, I'll have to kind of  
+Me: I can inject I can ingest it and and analyze it quickly. To to to understand what we need what do we need to to to give them and to and to prepare the app to to go for that.  
+Them: Yeah. I'll I'll take I'll I'll take a look at it. I because I think they did  
+Me: Yeah. I'll I'll take I'll I'll take a look at it I because I think they did send some information as to what  
+Them: send some information as to what what records they wanna see in place.  
+Me: what records they wanna see in place. Mhmm. Yeah. And that  
+Them: And that's that's the one we're kinda failing on.  
+Me: that's one we're kinda failing on. Okay. I mean, we have some information  
+Them: I mean, we have some information, but it's not as much as they'd like to see.  
+Me: but it's not as much as they'd like to see. Mhmm. So yeah. And that's so Oh, yeah.  
+Them: So Oh, yes. Do send me your email address.  
+Me: Do send me your email address.  
+Them: I have your email address.  
+Me: Oh. I don't have your email address. You don't have my okay. I'll I'll put it  
+Them: Send send that to me.  
+Me: I'll put it on the yeah. I'll put it on the on on WhatsApp. I'll send it.  
+Them: Yeah. And Yeah. And then I'll send it over to you when I'm when I'm back on the lap  
+Me: Yeah. And then I'll send that over to my when I'm back on the last  
+Them: And then you could just get an idea of the of the inputs that we capture.  
+Me: and then you could just get an idea of the of the that we capture.  
+Them: So okay.  
+Me: Mhmm. Yeah. So Okay? Okay. Right.  
+Them: Okay. So Wednesday morning. So  
+Me: So Wednesday morning. So  
+Them: I think that should be okay for me.  
+Me: I think that should be okay for me. Mhmm.  
+Them: But I'll confirm on Tuesday night. Is that okay?  
+Me: But I'll confirm on Tuesday night. Is that okay? Okay. Yeah. Yeah. Okay. No problem.  
+Them: Okay. All right. Okay. Thanks, Frankie.  
+Me: Okay. Alright. Alright. Thanks, Frank. Thank you. Okay. We'll see Bye. Bye. Bye.  
+Them: Alright. We'll see you. Alright? Bye bye. Bye bye.
