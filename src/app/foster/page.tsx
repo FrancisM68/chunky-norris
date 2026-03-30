@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -558,18 +559,19 @@ export default function FosterApp() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  const { data: session, status } = useSession();
+
   // ── Load data on mount ──
   useEffect(() => {
-    const id = localStorage.getItem("dar_foster_id");
-    if (!id) {
-      setFetchError(
-        "No foster ID found. Open the browser console and run:\n" +
-        "  localStorage.setItem('dar_foster_id', '<your-volunteer-id>')\n" +
-        "then refresh."
-      );
+    if (status === "loading") return;
+
+    if (status === "unauthenticated" || !session?.user?.volunteerId) {
+      setFetchError("Not authenticated.");
       setLoading(false);
       return;
     }
+
+    const id = session.user.volunteerId;
     setFosterId(id);
 
     fetch(`/api/animals?fosterId=${encodeURIComponent(id)}`, {
@@ -582,7 +584,6 @@ export default function FosterApp() {
         setFosterName(data.volunteer.firstName ?? "");
         setAnimals(data.animals);
 
-        // Fetch recent treatment logs for all animals in parallel
         const logGroups = await Promise.all(
           data.animals.map((a: Animal) =>
             fetch(`/api/treatment-logs?animalId=${encodeURIComponent(a.id)}`, {
@@ -614,7 +615,7 @@ export default function FosterApp() {
       })
       .catch((err: Error) => setFetchError(err.message))
       .finally(() => setLoading(false));
-  }, []);
+  }, [status, session]);
 
   // ── Actions ──
   function startLog(animal: Animal) {
