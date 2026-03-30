@@ -56,6 +56,7 @@ model Volunteer {
   town            String?
   county          String?
   eircode         String?
+  passwordHash    String?
   roles           Role[]    @default([FOSTER])
   isActive        Boolean   @default(true)
   createdAt       DateTime  @default(now())
