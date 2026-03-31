@@ -1,6 +1,6 @@
 # Admin Shell & Animal Register Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Build the back-office admin shell with a fixed sidebar, role-guarded layout, and a searchable/filterable animal register as the first real page.
 
@@ -15,7 +15,7 @@
 **Files:**
 - Create: `src/components/admin/Sidebar.tsx`
 
-- [ ] **Step 1: Create the `src/components/admin` directory and Sidebar component**
+- [x] **Step 1: Create the `src/components/admin` directory and Sidebar component**
 
 Create `src/components/admin/Sidebar.tsx`:
 
@@ -113,13 +113,13 @@ export function Sidebar() {
 }
 ```
 
-- [ ] **Step 2: Verify the file compiles**
+- [x] **Step 2: Verify the file compiles**
 
 Run: `npx tsc --noEmit --pretty 2>&1 | head -30`
 
 Expected: No errors referencing `Sidebar.tsx` (there may be unrelated pre-existing errors).
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```
 git add src/components/admin/Sidebar.tsx && git commit -m "feat(admin): add Sidebar nav component with DAR green branding"
@@ -132,7 +132,7 @@ git add src/components/admin/Sidebar.tsx && git commit -m "feat(admin): add Side
 **Files:**
 - Create: `src/app/admin/layout.tsx`
 
-- [ ] **Step 1: Create `src/app/admin/layout.tsx`**
+- [x] **Step 1: Create `src/app/admin/layout.tsx`**
 
 ```tsx
 import { auth } from "@/auth";
@@ -189,13 +189,13 @@ export default async function AdminLayout({
 }
 ```
 
-- [ ] **Step 2: Verify the file compiles**
+- [x] **Step 2: Verify the file compiles**
 
 Run: `npx tsc --noEmit --pretty 2>&1 | head -30`
 
 Expected: No new errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```
 git add src/app/admin/layout.tsx && git commit -m "feat(admin): add admin layout with role guard and header"
@@ -213,7 +213,7 @@ git add src/app/admin/layout.tsx && git commit -m "feat(admin): add admin layout
 - Create: `src/app/admin/volunteers/page.tsx`
 - Create: `src/app/admin/animals/[id]/page.tsx`
 
-- [ ] **Step 1: Create `src/app/admin/page.tsx` (redirect to animals)**
+- [x] **Step 1: Create `src/app/admin/page.tsx` (redirect to animals)**
 
 ```tsx
 import { redirect } from "next/navigation";
@@ -223,7 +223,7 @@ export default function AdminIndexPage() {
 }
 ```
 
-- [ ] **Step 2: Create stub pages**
+- [x] **Step 2: Create stub pages**
 
 Create `src/app/admin/animals/new/page.tsx`:
 
@@ -300,13 +300,13 @@ export default function VolunteersPage() {
 }
 ```
 
-- [ ] **Step 3: Verify all files compile**
+- [x] **Step 3: Verify all files compile**
 
 Run: `npx tsc --noEmit --pretty 2>&1 | head -30`
 
 Expected: No new errors.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```
 git add src/app/admin/page.tsx src/app/admin/animals/new/page.tsx src/app/admin/animals/\[id\]/page.tsx src/app/admin/treatments/page.tsx src/app/admin/tnr/page.tsx src/app/admin/volunteers/page.tsx && git commit -m "feat(admin): add index redirect and stub pages for treatments, tnr, volunteers, animal detail, new animal"
@@ -319,7 +319,7 @@ git add src/app/admin/page.tsx src/app/admin/animals/new/page.tsx src/app/admin/
 **Files:**
 - Create: `src/app/api/admin/animals/route.test.ts`
 
-- [ ] **Step 1: Write the test file**
+- [x] **Step 1: Write the test file**
 
 Create `src/app/api/admin/animals/route.test.ts`:
 
@@ -557,13 +557,13 @@ describe("GET /api/admin/animals", () => {
 });
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `npm test -- src/app/api/admin/animals/route.test.ts`
 
 Expected: FAIL — the test file cannot import `./route` because the file does not exist yet.
 
-- [ ] **Step 3: Commit the failing tests**
+- [x] **Step 3: Commit the failing tests**
 
 ```
 git add src/app/api/admin/animals/route.test.ts && git commit -m "test(admin): add failing tests for GET /api/admin/animals"
@@ -576,7 +576,7 @@ git add src/app/api/admin/animals/route.test.ts && git commit -m "test(admin): a
 **Files:**
 - Create: `src/app/api/admin/animals/route.ts`
 
-- [ ] **Step 1: Create `src/app/api/admin/animals/route.ts`**
+- [x] **Step 1: Create `src/app/api/admin/animals/route.ts`**
 
 ```ts
 import { NextRequest, NextResponse } from "next/server";
@@ -699,13 +699,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 }
 ```
 
-- [ ] **Step 2: Run tests to verify they pass**
+- [x] **Step 2: Run tests to verify they pass**
 
 Run: `npm test -- src/app/api/admin/animals/route.test.ts`
 
 Expected: PASS (all 7 tests green)
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```
 git add src/app/api/admin/animals/route.ts && git commit -m "feat(admin): implement GET /api/admin/animals with scope and search filtering"
@@ -719,7 +719,7 @@ git add src/app/api/admin/animals/route.ts && git commit -m "feat(admin): implem
 - Create: `src/lib/display-helpers.ts`
 - Create: `src/lib/display-helpers.test.ts`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `src/lib/display-helpers.test.ts`:
 
@@ -801,13 +801,13 @@ describe("statusPillStyle", () => {
 });
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `npm test -- src/lib/display-helpers.test.ts`
 
 Expected: FAIL — cannot resolve `./display-helpers`
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 Create `src/lib/display-helpers.ts`:
 
@@ -868,13 +868,13 @@ export function statusPillStyle(status: string): {
 }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `npm test -- src/lib/display-helpers.test.ts`
 
 Expected: PASS (all 19 tests green)
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```
 git add src/lib/display-helpers.ts src/lib/display-helpers.test.ts && git commit -m "feat(admin): add display helper functions for species, gender, status labels and pill styles"
@@ -889,7 +889,7 @@ git add src/lib/display-helpers.ts src/lib/display-helpers.test.ts && git commit
 
 This task depends on Tasks 5 and 6 being complete — the page calls `getTenantClient` directly (same pattern as the API route) and uses the display helpers.
 
-- [ ] **Step 1: Create `src/app/admin/animals/page.tsx`**
+- [x] **Step 1: Create `src/app/admin/animals/page.tsx`**
 
 ```tsx
 import Link from "next/link";
@@ -1228,13 +1228,13 @@ export default async function AnimalsPage({
 }
 ```
 
-- [ ] **Step 2: Verify the file compiles**
+- [x] **Step 2: Verify the file compiles**
 
 Run: `npx tsc --noEmit --pretty 2>&1 | head -30`
 
 Expected: No new errors referencing `animals/page.tsx`.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```
 git add src/app/admin/animals/page.tsx && git commit -m "feat(admin): add animal list page with search, scope toggle, and status pills"
@@ -1247,23 +1247,23 @@ git add src/app/admin/animals/page.tsx && git commit -m "feat(admin): add animal
 **Files:**
 - No new files
 
-- [ ] **Step 1: Run the full test suite**
+- [x] **Step 1: Run the full test suite**
 
 Run: `npm test`
 
 Expected: All tests pass, including the new tests in `src/app/api/admin/animals/route.test.ts` and `src/lib/display-helpers.test.ts`.
 
-- [ ] **Step 2: Verify the project builds**
+- [x] **Step 2: Verify the project builds**
 
 Run: `npm run build 2>&1 | tail -20`
 
 Expected: Build succeeds. The admin pages compile as Server Components. The Sidebar compiles as a Client Component.
 
-- [ ] **Step 3: Fix any build errors (if needed)**
+- [x] **Step 3: Fix any build errors (if needed)**
 
 If TypeScript or build errors appear, fix them in the relevant files and re-run `npm run build`.
 
-- [ ] **Step 4: Final commit (only if fixes were needed)**
+- [x] **Step 4: Final commit (only if fixes were needed)**
 
 ```
 git add -A && git commit -m "fix(admin): resolve build errors in admin shell"

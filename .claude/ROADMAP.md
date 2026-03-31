@@ -95,10 +95,15 @@ The first slice that actually works end-to-end.
 **Significance:** Proves the architecture works. First moment DAR
 could theoretically use this instead of paper notebooks.
 
-### v0.2.0 — Auth + Animal Register (End of Day 3–4)
-- Real login — no more localStorage hack
-- Admin can manage animals and view treatment history
-- Species-driven field visibility working
+### v0.2.0 — Auth + Animal Register (End of Day 3–4) 🚧 In Progress
+- ✅ Real login — Auth.js v5 credentials, no more localStorage hack
+- ✅ Admin shell — sidebar (DAR green), role-guarded layout, header
+- ✅ Animal list page — searchable, filterable, In Care / All Animals toggle
+- ✅ GET /api/admin/animals — scope + search, 8 tests
+- ✅ Display helpers — species/gender/status labels + pill styles, 23 tests
+- ✅ Stub pages — Treatments, TNR, Volunteers, Animal detail, New animal
+- ⬜ Add/edit animal form — species-driven field visibility
+- ⬜ Treatment history page per animal
 **Significance:** Lisa can log in and see DAR's animals.
 
 ### v0.3.0 — Real Data (End of Day 5)
