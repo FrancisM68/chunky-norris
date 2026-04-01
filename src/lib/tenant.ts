@@ -16,9 +16,9 @@ function createTenantClient(slug: string): PrismaClient {
 
   // Set search_path immediately on every new connection so all queries issued
   // by this client target the rescue's own schema.
-  pool.on("connect", (client) => {
+  pool.on("connect", async (client) => {
     // slug has already been validated against SLUG_PATTERN — safe to interpolate.
-    client.query(`SET search_path TO ${slug}, public`);
+    await client.query(`SET search_path TO ${slug}, public`);
   });
 
   const adapter = new PrismaPg(pool);
