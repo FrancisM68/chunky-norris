@@ -100,11 +100,13 @@ could theoretically use this instead of paper notebooks.
 - ✅ Admin shell — sidebar (DAR green), role-guarded layout, header
 - ✅ Animal list page — searchable, filterable, In Care / All Animals toggle
 - ✅ GET /api/admin/animals — scope + search, 8 tests
-- ✅ Display helpers — species/gender/status labels + pill styles, 23 tests
+- ✅ Display helpers — species/gender/status labels + pill styles, 30 tests
 - ✅ Stub pages — Treatments, TNR, Volunteers, Animal detail, New animal
-- ✅ Add/edit animal form — species-driven field visibility
+- ✅ Add/edit animal form — species-driven field visibility, P0 departure fields, inline view/edit toggle
+- ✅ POST /api/admin/animals + PATCH /api/admin/animals/[id] + GET /api/admin/animals/[id] — 22 tests
+- ✅ fix(tenant): await search_path on connect — prevented schema race condition on new DB connections
 - ⬜ Treatment history page per animal
-**Significance:** Lisa can log in and see DAR's animals.
+**Significance:** Lisa can log in, see and manage all of DAR's animals.
 
 ### v0.3.0 — Real Data (End of Day 5)
 - 1,172 cat records imported from Excel

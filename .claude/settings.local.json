@@ -83,7 +83,17 @@
       "Bash(PATH=\"/c/Program Files/nodejs:$PATH\" npx tsx --no-cache scripts/seed-snoopy.ts 2>&1)",
       "Bash(PATH=\"/c/Program Files/nodejs:$PATH\" npx vitest run)",
       "WebSearch",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(git merge:*)",
+      "Bash(git stash:*)",
+      "Bash(git tag:*)",
+      "Bash(bash \"C:/Users/Administrator/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.6/skills/brainstorming/scripts/start-server.sh\" --project-dir \"C:/Projects/ChunkyNorris\")",
+      "Bash(PATH=\"/c/Program Files/nodejs:$PATH\" bash \"C:/Users/Administrator/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.6/skills/brainstorming/scripts/start-server.sh\" --project-dir \"C:/Projects/ChunkyNorris\")",
+      "Bash(git:*)",
+      "Bash(/c/Program Files/nodejs/npm install)",
+      "Bash(bash C:/Users/Administrator/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/skills/brainstorming/scripts/start-server.sh --project-dir C:/Projects/ChunkyNorris)",
+      "Bash(npx vitest:*)",
+      "Bash(node -e \"console.log\\(new Date\\(\\).toISOString\\(\\).replace\\(/[-T:.Z]/g, ''\\).slice\\(0,14\\)\\)\")"
     ]
   }
 }

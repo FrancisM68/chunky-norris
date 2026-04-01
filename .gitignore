@@ -23,6 +23,9 @@
 # reference files (prototypes, client data — not for version control)
 /reference/
 
+# superpowers brainstorm sessions
+.superpowers/
+
 # misc
 .DS_Store
 *.pem
