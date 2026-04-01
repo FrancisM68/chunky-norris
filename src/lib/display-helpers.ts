@@ -9,6 +9,7 @@ export function speciesLabel(species: string): string {
     DOG: "Dog",
     RABBIT: "Rabbit",
     FERRET: "Ferret",
+    OTHER: "Other",
   };
   return map[species] ?? species;
 }
@@ -51,4 +52,16 @@ export function statusPillStyle(status: string): {
     TNR_RETURNED: { backgroundColor: "#f1f8e9", color: "#558b2f" },
   };
   return map[status] ?? { backgroundColor: "#f3f4f6", color: "#374151" };
+}
+
+export function disposalMethodLabel(method: string): string {
+  const map: Record<string, string> = {
+    REHOMED: "Rehomed",
+    RECLAIMED: "Reclaimed",
+    EUTHANISED: "Euthanised",
+    DIED_IN_CARE: "Died in Care",
+    TNR_RETURNED: "TNR Returned",
+    TRANSFERRED: "Transferred",
+  };
+  return map[method] ?? method;
 }

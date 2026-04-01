@@ -1,11 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { speciesLabel, genderLabel, statusLabel, statusPillStyle } from "./display-helpers";
+import { speciesLabel, genderLabel, statusLabel, statusPillStyle, disposalMethodLabel } from "./display-helpers";
 
 describe("speciesLabel", () => {
   it("returns 'Cat' for CAT", () => expect(speciesLabel("CAT")).toBe("Cat"));
   it("returns 'Dog' for DOG", () => expect(speciesLabel("DOG")).toBe("Dog"));
   it("returns 'Rabbit' for RABBIT", () => expect(speciesLabel("RABBIT")).toBe("Rabbit"));
   it("returns 'Ferret' for FERRET", () => expect(speciesLabel("FERRET")).toBe("Ferret"));
+  it("returns 'Other' for OTHER", () => expect(speciesLabel("OTHER")).toBe("Other"));
 });
 
 describe("genderLabel", () => {
@@ -72,4 +73,13 @@ describe("statusPillStyle", () => {
     expect(style.backgroundColor).toBe("#f1f8e9");
     expect(style.color).toBe("#558b2f");
   });
+});
+
+describe("disposalMethodLabel", () => {
+  it("returns 'Rehomed' for REHOMED", () => expect(disposalMethodLabel("REHOMED")).toBe("Rehomed"));
+  it("returns 'Reclaimed' for RECLAIMED", () => expect(disposalMethodLabel("RECLAIMED")).toBe("Reclaimed"));
+  it("returns 'Euthanised' for EUTHANISED", () => expect(disposalMethodLabel("EUTHANISED")).toBe("Euthanised"));
+  it("returns 'Died in Care' for DIED_IN_CARE", () => expect(disposalMethodLabel("DIED_IN_CARE")).toBe("Died in Care"));
+  it("returns 'TNR Returned' for TNR_RETURNED", () => expect(disposalMethodLabel("TNR_RETURNED")).toBe("TNR Returned"));
+  it("returns 'Transferred' for TRANSFERRED", () => expect(disposalMethodLabel("TRANSFERRED")).toBe("Transferred"));
 });

@@ -140,6 +140,10 @@ model Animal {
   // --- Legacy data ---
   legacyNotes           String?       // Raw NOTES field from Excel — do not parse
 
+  // --- Additional ---
+  speciesOther          String?       // Free-text species name when species = OTHER
+  notes                 String?       // Behavioural/personality notes for admins
+
   // --- Meta ---
   addedById             String?
   createdAt             DateTime      @default(now())
@@ -160,6 +164,7 @@ enum Species {
   DOG
   RABBIT
   FERRET
+  OTHER
 }
 
 enum Gender {
