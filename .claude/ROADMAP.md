@@ -102,7 +102,7 @@ could theoretically use this instead of paper notebooks.
 - ✅ GET /api/admin/animals — scope + search, 8 tests
 - ✅ Display helpers — species/gender/status labels + pill styles, 23 tests
 - ✅ Stub pages — Treatments, TNR, Volunteers, Animal detail, New animal
-- ⬜ Add/edit animal form — species-driven field visibility
+- ✅ Add/edit animal form — species-driven field visibility
 - ⬜ Treatment history page per animal
 **Significance:** Lisa can log in and see DAR's animals.
 
