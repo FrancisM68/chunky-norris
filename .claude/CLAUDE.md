@@ -1,5 +1,15 @@
 # ChunkyNorris — AI Instructions
 
+## Before You Start
+
+- Verify `node`, `npm`, `npx` are on PATH (`which node` in Git Bash)
+- Confirm `.env` exists with `DATABASE_URL` set
+- Run `npx prisma generate` if schema has changed since last session
+- Shell is Git Bash — be aware of PATH quirks; always verify file locations
+  against actual project structure before creating or moving files
+
+---
+
 ## What this project is
 
 ChunkyNorris is a pet rescue management web application built initially for
@@ -15,8 +25,8 @@ small animal rescue organisations across Ireland.
 
 ## Tech stack
 
-- **Frontend**: Next.js (React)
-- **Database**: PostgreSQL with Prisma ORM
+- **Frontend**: Next.js (React, App Router, `src/` directory layout)
+- **Database**: PostgreSQL with Prisma ORM (v7, driver adapter pattern)
 - **Multi-tenancy**: Schema-per-rescue (each rescue gets its own Postgres schema)
 - **Hosting**: Hetzner VPS (self-hosted for cost efficiency)
 - **Auth**: Role-based access control (admin, foster, volunteer, home checker)
@@ -122,6 +132,7 @@ for cats only, kennel cough vaccination for dogs only, etc.
   for a regulatory reason
 - Do not create a single shared database schema — the architecture is
   schema-per-rescue by design
+- Do not use `--turbopack` flag unless explicitly requested
 
 ---
 
@@ -132,9 +143,21 @@ for cats only, kennel cough vaccination for dogs only, etc.
   middleware
 - Named exports preferred
 - Components live in `src/components`, pages in `src/app` (Next.js App Router)
+- Middleware lives in `src/middleware.ts` — NOT the project root
 - Shared types in `src/types`
 - API routes in `src/app/api`
+- All directories and npm package names must be lowercase and hyphen-separated
 - Write tests for all API routes and compliance-critical functions
+
+---
+
+## Prisma rules
+
+- Prisma 7 uses driver adapters — do not use direct `url` in the datasource block;
+  use `@prisma/adapter-pg`
+- Always load `.env` explicitly in scripts: `import 'dotenv/config'`
+- Run `prisma generate` then `prisma db push` after any schema change before
+  running the app or tests
 
 ---
 
@@ -158,47 +181,10 @@ for cats only, kennel cough vaccination for dogs only, etc.
 - `reference/DAR_TNR_ONLY_REGISTER.xlsx` — 281 TNR records. Separate schema
   required per DoA rules.
 
-## Before You Start
-- Verify `node`, `npm`, `npx` are on PATH (`which node` in Git Bash)
-- Confirm `.env` exists with `DATABASE_URL` set
-- Run `npx prisma generate` if schema has changed since last session
-- Shell is Git Bash — be aware of PATH quirks
-
-## Environment
-- Runtime: Node.js (ensure it's installed and in PATH before starting)
-- When using Git Bash on Windows, always check `which node` and `which npm` before running commands
-- Shell: Git Bash (be aware of PATH quirks)
-
-## Prisma & Database
-- Always run `npx prisma generate` after schema changes before running the app
-- Prisma 7+ uses the `adapter` approach (not `url` in datasource) with `@prisma/adapter-pg`
-- Always load `.env` explicitly: `import 'dotenv/config'`
-
-## Next.js Conventions
-- This project uses `src/` directory — middleware.ts goes in `src/middleware.ts`, NOT the project root
-- Do not use `--turbopack` flag unless explicitly requested
-- Always verify file locations against actual project structure before creating files
-
-## Environment setup
-
-Before starting any project work, verify runtime prerequisites: `node --version`,
-`npm --version`, and check PATH configuration. On Windows, Node.js may need to be
-added to system PATH manually if using Git Bash.
-
-## Prisma & database
-
-- Prisma 7 uses driver adapters — do not use direct `url` in the datasource block
-- Always load `.env` explicitly in Prisma scripts: `import 'dotenv/config'`
-- Run `prisma generate` then `prisma db push` after any schema change before proceeding
-
-## Project naming
-
-Always use lowercase, hyphen-separated names for directories and npm packages.
-npm rejects capitalised package names — `chunky-norris` not `ChunkyNorris`.
+---
 
 ## Roadmap
 
 See `.claude/ROADMAP.md` for the current development plan, milestones,
 and session objectives. Check this before starting work to stay aligned
 with priorities.
-

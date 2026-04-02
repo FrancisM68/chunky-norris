@@ -7,7 +7,9 @@
       "Bash(where jq:*)",
       "Bash(node -e:*)",
       "Bash(npx prisma:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(git commit:*)",
+      "Bash(git restore:*)"
     ],
     "defaultMode": "bypassPermissions"
   }
