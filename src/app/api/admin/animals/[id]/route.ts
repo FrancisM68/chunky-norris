@@ -43,11 +43,18 @@ export async function PATCH(req: NextRequest, { params }: Context): Promise<Next
   const { id } = await params;
   const db = getTenantClient("dar");
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
   try {
     const existing = await db.animal.findUnique({ where: { id } });
     if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-    const body = await req.json();
     const errors = validateAnimalBody(body);
     if (Object.keys(errors).length > 0) {
       return NextResponse.json({ error: "Validation failed", fields: errors }, { status: 422 });

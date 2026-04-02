@@ -158,6 +158,27 @@ for cats only, kennel cough vaccination for dogs only, etc.
 - `reference/DAR_TNR_ONLY_REGISTER.xlsx` — 281 TNR records. Separate schema
   required per DoA rules.
 
+## Before You Start
+- Verify `node`, `npm`, `npx` are on PATH (`which node` in Git Bash)
+- Confirm `.env` exists with `DATABASE_URL` set
+- Run `npx prisma generate` if schema has changed since last session
+- Shell is Git Bash — be aware of PATH quirks
+
+## Environment
+- Runtime: Node.js (ensure it's installed and in PATH before starting)
+- When using Git Bash on Windows, always check `which node` and `which npm` before running commands
+- Shell: Git Bash (be aware of PATH quirks)
+
+## Prisma & Database
+- Always run `npx prisma generate` after schema changes before running the app
+- Prisma 7+ uses the `adapter` approach (not `url` in datasource) with `@prisma/adapter-pg`
+- Always load `.env` explicitly: `import 'dotenv/config'`
+
+## Next.js Conventions
+- This project uses `src/` directory — middleware.ts goes in `src/middleware.ts`, NOT the project root
+- Do not use `--turbopack` flag unless explicitly requested
+- Always verify file locations against actual project structure before creating files
+
 ## Environment setup
 
 Before starting any project work, verify runtime prerequisites: `node --version`,
@@ -180,3 +201,4 @@ npm rejects capitalised package names — `chunky-norris` not `ChunkyNorris`.
 See `.claude/ROADMAP.md` for the current development plan, milestones,
 and session objectives. Check this before starting work to stay aligned
 with priorities.
+

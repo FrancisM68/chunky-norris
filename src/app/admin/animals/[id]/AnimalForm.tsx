@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { TERMINAL_STATUSES } from "@/lib/constants";
 import {
   speciesLabel,
@@ -155,6 +156,15 @@ function FieldRow({ label, children }: { label: string; children: React.ReactNod
   );
 }
 
+// Two fields side-by-side within a section
+function TwoCol({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 12px" }}>
+      {children}
+    </div>
+  );
+}
+
 function inputStyle(hasError?: boolean): React.CSSProperties {
   return {
     width: "100%", padding: "6px 10px", border: `1px solid ${hasError ? "#ef4444" : "#d1d5db"}`,
@@ -189,6 +199,7 @@ function ViewMode({ animal, onEdit }: { animal: AnimalDetail; onEdit: () => void
 
   return (
     <div>
+      {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 700, color: "#111827", margin: 0 }}>
@@ -202,81 +213,104 @@ function ViewMode({ animal, onEdit }: { animal: AnimalDetail; onEdit: () => void
           <span style={{ ...statusPillStyle(animal.status), padding: "4px 12px", borderRadius: 12, fontSize: 12, fontWeight: 600 }}>
             {statusLabel(animal.status)}
           </span>
+          <Link
+            href={`/admin/animals/${animal.id}/treatments`}
+            style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid #d1d5db", backgroundColor: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, textDecoration: "none" }}
+          >
+            Treatments
+          </Link>
           <button onClick={onEdit} style={{ padding: "6px 14px", borderRadius: 6, backgroundColor: "#2D5A27", color: "#fff", border: "none", fontSize: 13, fontWeight: 500, cursor: "pointer" }}>
             Edit
           </button>
         </div>
       </div>
 
-      <SectionCard title="Identity">
-        <div style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: "5px 12px" }}>
-          <ViewRow label="Species" value={speciesDisplay} />
-          <ViewRow label="Gender" value={genderLabel(animal.gender)} />
-          <ViewRow label="Breed" value={animal.breed} />
-          <ViewRow label="Description" value={animal.description} />
-          <ViewRow label="Date of Birth" value={toDisplayDate(animal.dateOfBirth)} />
-          <ViewRow label="Age at Intake" value={animal.ageAtIntake} />
-          <ViewRow label="Microchip" value={animal.microchipNumber} />
-          <ViewRow label="Microchip Date" value={toDisplayDate(animal.microchipDate)} />
-        </div>
-      </SectionCard>
+      {/* Two-column section grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, alignItems: "start" }}>
 
-      <SectionCard title="Intake">
-        <div style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: "5px 12px" }}>
-          <ViewRow label="Date" value={toDisplayDate(animal.intakeDate)} />
-          <ViewRow label="Source" value={INTAKE_SOURCE_OPTIONS.find(o => o.value === animal.intakeSource)?.label ?? animal.intakeSource} />
-          {animal.intakeSource === "STRAY" && <ViewRow label="Location" value={animal.strayLocation} />}
-          <ViewRow label="Info Source" value={animal.infoSource} />
-          <ViewRow label="DAR Ref" value={animal.darRefNumber} />
-          <ViewRow label="Vet Ref" value={animal.vetRefNumber} />
-        </div>
-      </SectionCard>
+        {/* Left column: Identity + Medical */}
+        <div>
+          <SectionCard title="Identity">
+            <div style={{ display: "grid", gridTemplateColumns: "130px 1fr", gap: "5px 12px" }}>
+              <ViewRow label="Species" value={speciesDisplay} />
+              <ViewRow label="Gender" value={genderLabel(animal.gender)} />
+              <ViewRow label="Breed" value={animal.breed} />
+              <ViewRow label="Description" value={animal.description} />
+              <ViewRow label="Date of Birth" value={toDisplayDate(animal.dateOfBirth)} />
+              {animal.dobIsEstimate && animal.dateOfBirth && (
+                <>
+                  <span />
+                  <span style={{ fontSize: 11, color: "#9ca3af" }}>estimated</span>
+                </>
+              )}
+              <ViewRow label="Age at Intake" value={animal.ageAtIntake} />
+              <ViewRow label="Microchip" value={animal.microchipNumber} />
+              <ViewRow label="Microchip Date" value={toDisplayDate(animal.microchipDate)} />
+            </div>
+          </SectionCard>
 
-      <SectionCard title="Medical">
-        <div style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: "5px 12px" }}>
-          <ViewRow label="Vaccination" value={VACCINATION_STATUS_OPTIONS.find(o => o.value === animal.vaccinationStatus)?.label ?? animal.vaccinationStatus} />
-          <ViewRow label="V1 Date" value={toDisplayDate(animal.v1Date)} />
-          <ViewRow label="V2 Date" value={toDisplayDate(animal.v2Date)} />
-          <ViewRow label="Vaccine Type" value={animal.vaccineType} />
-          <ViewRow label="Neutered Date" value={toDisplayDate(animal.neuteredDate)} />
-          <ViewRow label="Neutered Vet" value={animal.neuteredVet} />
-          {animal.species === "CAT" && (
-            <>
-              <ViewRow label="FIV" value={TEST_RESULT_OPTIONS.find(o => o.value === animal.fivResult)?.label ?? animal.fivResult} />
-              <ViewRow label="FeLV" value={TEST_RESULT_OPTIONS.find(o => o.value === animal.felvResult)?.label ?? animal.felvResult} />
-            </>
+          <SectionCard title="Medical">
+            <div style={{ display: "grid", gridTemplateColumns: "130px 1fr", gap: "5px 12px" }}>
+              <ViewRow label="Vaccination" value={VACCINATION_STATUS_OPTIONS.find(o => o.value === animal.vaccinationStatus)?.label ?? animal.vaccinationStatus} />
+              <ViewRow label="V1 Date" value={toDisplayDate(animal.v1Date)} />
+              <ViewRow label="V2 Date" value={toDisplayDate(animal.v2Date)} />
+              <ViewRow label="Vaccine Type" value={animal.vaccineType} />
+              <ViewRow label="Neutered Date" value={toDisplayDate(animal.neuteredDate)} />
+              <ViewRow label="Neutered Vet" value={animal.neuteredVet} />
+              {animal.species === "CAT" && (
+                <>
+                  <ViewRow label="FIV" value={TEST_RESULT_OPTIONS.find(o => o.value === animal.fivResult)?.label ?? animal.fivResult} />
+                  <ViewRow label="FeLV" value={TEST_RESULT_OPTIONS.find(o => o.value === animal.felvResult)?.label ?? animal.felvResult} />
+                </>
+              )}
+              {animal.species === "DOG" && (
+                <>
+                  <ViewRow label="Kennel Cough" value={toDisplayDate(animal.kennelCoughDate)} />
+                  <ViewRow label="Rabies Date" value={toDisplayDate(animal.rabiesDate)} />
+                  <ViewRow label="Condition" value={CONDITION_OPTIONS.find(o => o.value === animal.condition)?.label ?? animal.condition} />
+                </>
+              )}
+            </div>
+          </SectionCard>
+        </div>
+
+        {/* Right column: Intake + Status + Notes */}
+        <div>
+          <SectionCard title="Intake">
+            <div style={{ display: "grid", gridTemplateColumns: "130px 1fr", gap: "5px 12px" }}>
+              <ViewRow label="Date" value={toDisplayDate(animal.intakeDate)} />
+              <ViewRow label="Source" value={INTAKE_SOURCE_OPTIONS.find(o => o.value === animal.intakeSource)?.label ?? animal.intakeSource} />
+              {animal.intakeSource === "STRAY" && <ViewRow label="Location" value={animal.strayLocation} />}
+              <ViewRow label="Info Source" value={animal.infoSource} />
+              <ViewRow label="DAR Ref" value={animal.darRefNumber} />
+              <ViewRow label="Vet Ref" value={animal.vetRefNumber} />
+            </div>
+          </SectionCard>
+
+          <SectionCard title="Status">
+            <div style={{ display: "grid", gridTemplateColumns: "130px 1fr", gap: "5px 12px" }}>
+              <ViewRow label="Status" value={statusLabel(animal.status)} />
+              <ViewRow label="Location" value={animal.currentLocation} />
+              {isTerminal && (
+                <>
+                  <ViewRow label="Departure Date" value={toDisplayDate(animal.departureDate)} />
+                  <ViewRow label="Disposal Method" value={animal.disposalMethod ? disposalMethodLabel(animal.disposalMethod) : null} />
+                </>
+              )}
+            </div>
+          </SectionCard>
+
+          {animal.notes && (
+            <SectionCard title="Notes">
+              <p style={{ margin: 0, fontSize: 13, color: "#374151", whiteSpace: "pre-wrap" }}>{animal.notes}</p>
+            </SectionCard>
           )}
-          {animal.species === "DOG" && (
-            <>
-              <ViewRow label="Kennel Cough" value={toDisplayDate(animal.kennelCoughDate)} />
-              <ViewRow label="Rabies Date" value={toDisplayDate(animal.rabiesDate)} />
-              <ViewRow label="Condition" value={CONDITION_OPTIONS.find(o => o.value === animal.condition)?.label ?? animal.condition} />
-            </>
-          )}
         </div>
-      </SectionCard>
+      </div>
 
-      <SectionCard title="Status">
-        <div style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: "5px 12px" }}>
-          <ViewRow label="Status" value={statusLabel(animal.status)} />
-          <ViewRow label="Location" value={animal.currentLocation} />
-          {isTerminal && (
-            <>
-              <ViewRow label="Departure Date" value={toDisplayDate(animal.departureDate)} />
-              <ViewRow label="Disposal Method" value={animal.disposalMethod ? disposalMethodLabel(animal.disposalMethod) : null} />
-            </>
-          )}
-        </div>
-      </SectionCard>
-
-      {animal.notes && (
-        <SectionCard title="Notes">
-          <p style={{ margin: 0, fontSize: 13, color: "#374151", whiteSpace: "pre-wrap" }}>{animal.notes}</p>
-        </SectionCard>
-      )}
-
+      {/* Legacy notes — full width below both columns */}
       {animal.legacyNotes !== null && (
-        <div style={{ border: "1px dashed #d1d5db", borderRadius: 8, padding: "12px 16px", backgroundColor: "#f9fafb" }}>
+        <div style={{ border: "1px dashed #d1d5db", borderRadius: 8, padding: "12px 16px", backgroundColor: "#f9fafb", marginTop: 0 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
             Legacy Notes — imported record
           </div>
@@ -432,7 +466,7 @@ export function AnimalForm({ animal }: { animal: AnimalDetail | null }) {
   return (
     <form onSubmit={handleSubmit}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
         <h1 style={{ fontSize: 22, fontWeight: 700, color: "#111827", margin: 0 }}>
           {isCreate ? "Add Animal" : `Editing: ${animal?.nickname ?? animal?.officialName}`}
         </h1>
@@ -448,7 +482,7 @@ export function AnimalForm({ animal }: { animal: AnimalDetail | null }) {
         </div>
       )}
 
-      {/* Species */}
+      {/* Species — full width */}
       <div style={{ background: "#2D5A27", borderRadius: 8, padding: "12px 16px", marginBottom: 12 }}>
         <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.7)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
           Species *
@@ -476,178 +510,211 @@ export function AnimalForm({ animal }: { animal: AnimalDetail | null }) {
         )}
       </div>
 
-      {/* Identity */}
-      <SectionCard title="Identity">
-        <FieldRow label="Official Name *">
-          <input type="text" value={form.officialName} onChange={(e) => set("officialName", e.target.value)}
-            placeholder='"Moneymore Kitten1 - Snoopy"' style={inputStyle(!!errors.officialName)} />
-          <ErrorMsg msg={errors.officialName} />
-        </FieldRow>
-        <FieldRow label="Nickname">
-          <input type="text" value={form.nickname} onChange={(e) => set("nickname", e.target.value)} style={inputStyle()} />
-        </FieldRow>
-        <FieldRow label="Gender *">
-          <select value={form.gender} onChange={(e) => set("gender", e.target.value)} style={inputStyle(!!errors.gender)}>
-            <option value="">— Select —</option>
-            {GENDER_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
-          <ErrorMsg msg={errors.gender} />
-        </FieldRow>
-        <FieldRow label="Breed">
-          <input type="text" value={form.breed} onChange={(e) => set("breed", e.target.value)} style={inputStyle()} />
-        </FieldRow>
-        <FieldRow label="Description">
-          <input type="text" value={form.description} onChange={(e) => set("description", e.target.value)} placeholder="Coat colour/pattern" style={inputStyle()} />
-        </FieldRow>
-        <FieldRow label="Date of Birth">
-          <input type="date" value={form.dateOfBirth} onChange={(e) => set("dateOfBirth", e.target.value)} style={inputStyle()} />
-        </FieldRow>
-        {form.dateOfBirth && (
-          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10, fontSize: 13, color: "#374151" }}>
-            <input type="checkbox" id="dobEst" checked={form.dobIsEstimate} onChange={(e) => set("dobIsEstimate", e.target.checked)} />
-            <label htmlFor="dobEst">Date of birth is estimated</label>
-          </div>
-        )}
-        <FieldRow label="Age at Intake">
-          <input type="text" value={form.ageAtIntake} onChange={(e) => set("ageAtIntake", e.target.value)} placeholder='"~6 weeks", "2-3 years"' style={inputStyle()} />
-        </FieldRow>
-        <FieldRow label="Microchip Number">
-          <input type="text" value={form.microchipNumber} onChange={(e) => set("microchipNumber", e.target.value)} style={inputStyle()} />
-        </FieldRow>
-        <FieldRow label="Microchip Date">
-          <input type="date" value={form.microchipDate} onChange={(e) => set("microchipDate", e.target.value)} style={inputStyle()} />
-        </FieldRow>
-      </SectionCard>
+      {/* Two-column section grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, alignItems: "start" }}>
 
-      {/* Intake */}
-      <SectionCard title="Intake">
-        <FieldRow label="Intake Date *">
-          <input type="date" value={form.intakeDate} onChange={(e) => set("intakeDate", e.target.value)} style={inputStyle(!!errors.intakeDate)} />
-          <ErrorMsg msg={errors.intakeDate} />
-        </FieldRow>
-        <FieldRow label="Intake Source *">
-          <select value={intakeSource}
-            onChange={(e) => { setIntakeSource(e.target.value); if (e.target.value !== "STRAY") set("strayLocation", ""); }}
-            style={inputStyle(!!errors.intakeSource)}>
-            <option value="">— Select —</option>
-            {INTAKE_SOURCE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
-          <ErrorMsg msg={errors.intakeSource} />
-        </FieldRow>
-        {intakeSource === "STRAY" && (
-          <FieldRow label="Stray Location *">
-            <input type="text" value={form.strayLocation} onChange={(e) => set("strayLocation", e.target.value)} style={inputStyle(!!errors.strayLocation)} />
-            <ErrorMsg msg={errors.strayLocation} />
-          </FieldRow>
-        )}
-        <FieldRow label="Info Source">
-          <input type="text" value={form.infoSource} onChange={(e) => set("infoSource", e.target.value)} style={inputStyle()} />
-        </FieldRow>
-        <FieldRow label="DAR Ref Number">
-          <input type="text" value={form.darRefNumber} onChange={(e) => set("darRefNumber", e.target.value)} style={inputStyle()} />
-        </FieldRow>
-        <FieldRow label="Vet Ref Number">
-          <input type="text" value={form.vetRefNumber} onChange={(e) => set("vetRefNumber", e.target.value)} style={inputStyle()} />
-        </FieldRow>
-      </SectionCard>
-
-      {/* Medical */}
-      <SectionCard title="Medical">
-        <FieldRow label="Vaccination Status">
-          <select value={form.vaccinationStatus} onChange={(e) => set("vaccinationStatus", e.target.value)} style={inputStyle()}>
-            <option value="">— Select —</option>
-            {VACCINATION_STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
-        </FieldRow>
-        <FieldRow label="V1 Date"><input type="date" value={form.v1Date} onChange={(e) => set("v1Date", e.target.value)} style={inputStyle()} /></FieldRow>
-        <FieldRow label="V2 Date"><input type="date" value={form.v2Date} onChange={(e) => set("v2Date", e.target.value)} style={inputStyle()} /></FieldRow>
-        <FieldRow label="Vaccine Type"><input type="text" value={form.vaccineType} onChange={(e) => set("vaccineType", e.target.value)} placeholder='"Nobivac Tri-Cat"' style={inputStyle()} /></FieldRow>
-        <FieldRow label="Neutered Date"><input type="date" value={form.neuteredDate} onChange={(e) => set("neuteredDate", e.target.value)} style={inputStyle()} /></FieldRow>
-        <FieldRow label="Neutered Vet"><input type="text" value={form.neuteredVet} onChange={(e) => set("neuteredVet", e.target.value)} style={inputStyle()} /></FieldRow>
-
-        {species === "CAT" && (
-          <div style={{ background: "#fef9ec", border: "1px solid #fde68a", borderRadius: 6, padding: "10px 12px", marginTop: 8 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "#92400e", marginBottom: 8 }}>Cat-specific</div>
-            <FieldRow label="FIV Result">
-              <select value={form.fivResult} onChange={(e) => set("fivResult", e.target.value)} style={inputStyle()}>
-                <option value="">— Select —</option>
-                {TEST_RESULT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-              </select>
+        {/* Left column: Identity + Medical */}
+        <div>
+          <SectionCard title="Identity">
+            <TwoCol>
+              <FieldRow label="Official Name *">
+                <input type="text" value={form.officialName} onChange={(e) => set("officialName", e.target.value)}
+                  placeholder='"Moneymore Kitten1 - Snoopy"' style={inputStyle(!!errors.officialName)} />
+                <ErrorMsg msg={errors.officialName} />
+              </FieldRow>
+              <FieldRow label="Nickname">
+                <input type="text" value={form.nickname} onChange={(e) => set("nickname", e.target.value)} style={inputStyle()} />
+              </FieldRow>
+            </TwoCol>
+            <TwoCol>
+              <FieldRow label="Gender *">
+                <select value={form.gender} onChange={(e) => set("gender", e.target.value)} style={inputStyle(!!errors.gender)}>
+                  <option value="">— Select —</option>
+                  {GENDER_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+                <ErrorMsg msg={errors.gender} />
+              </FieldRow>
+              <FieldRow label="Breed">
+                <input type="text" value={form.breed} onChange={(e) => set("breed", e.target.value)} style={inputStyle()} />
+              </FieldRow>
+            </TwoCol>
+            <FieldRow label="Description">
+              <input type="text" value={form.description} onChange={(e) => set("description", e.target.value)} placeholder="Coat colour/pattern" style={inputStyle()} />
             </FieldRow>
-            <FieldRow label="FeLV Result">
-              <select value={form.felvResult} onChange={(e) => set("felvResult", e.target.value)} style={inputStyle()}>
-                <option value="">— Select —</option>
-                {TEST_RESULT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-              </select>
-            </FieldRow>
-          </div>
-        )}
+            <TwoCol>
+              <FieldRow label="Date of Birth">
+                <input type="date" value={form.dateOfBirth} onChange={(e) => set("dateOfBirth", e.target.value)} style={inputStyle()} />
+              </FieldRow>
+              <FieldRow label="Age at Intake">
+                <input type="text" value={form.ageAtIntake} onChange={(e) => set("ageAtIntake", e.target.value)} placeholder='"~6 weeks"' style={inputStyle()} />
+              </FieldRow>
+            </TwoCol>
+            {form.dateOfBirth && (
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10, fontSize: 13, color: "#374151" }}>
+                <input type="checkbox" id="dobEst" checked={form.dobIsEstimate} onChange={(e) => set("dobIsEstimate", e.target.checked)} />
+                <label htmlFor="dobEst">Date of birth is estimated</label>
+              </div>
+            )}
+            <TwoCol>
+              <FieldRow label="Microchip Number">
+                <input type="text" value={form.microchipNumber} onChange={(e) => set("microchipNumber", e.target.value)} style={inputStyle()} />
+              </FieldRow>
+              <FieldRow label="Microchip Date">
+                <input type="date" value={form.microchipDate} onChange={(e) => set("microchipDate", e.target.value)} style={inputStyle()} />
+              </FieldRow>
+            </TwoCol>
+          </SectionCard>
 
-        {species === "DOG" && (
-          <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 6, padding: "10px 12px", marginTop: 8 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "#1d4ed8", marginBottom: 8 }}>Dog-specific</div>
-            <FieldRow label="Kennel Cough Date"><input type="date" value={form.kennelCoughDate} onChange={(e) => set("kennelCoughDate", e.target.value)} style={inputStyle()} /></FieldRow>
-            <FieldRow label="Rabies Date"><input type="date" value={form.rabiesDate} onChange={(e) => set("rabiesDate", e.target.value)} style={inputStyle()} /></FieldRow>
-            <FieldRow label="Condition">
-              <select value={form.condition} onChange={(e) => set("condition", e.target.value)} style={inputStyle()}>
-                <option value="">— Select —</option>
-                {CONDITION_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-              </select>
-            </FieldRow>
-          </div>
-        )}
-      </SectionCard>
+          <SectionCard title="Medical">
+            <TwoCol>
+              <FieldRow label="Vaccination Status">
+                <select value={form.vaccinationStatus} onChange={(e) => set("vaccinationStatus", e.target.value)} style={inputStyle()}>
+                  <option value="">— Select —</option>
+                  {VACCINATION_STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+              </FieldRow>
+              <FieldRow label="Vaccine Type">
+                <input type="text" value={form.vaccineType} onChange={(e) => set("vaccineType", e.target.value)} placeholder='"Nobivac Tri-Cat"' style={inputStyle()} />
+              </FieldRow>
+            </TwoCol>
+            <TwoCol>
+              <FieldRow label="V1 Date"><input type="date" value={form.v1Date} onChange={(e) => set("v1Date", e.target.value)} style={inputStyle()} /></FieldRow>
+              <FieldRow label="V2 Date"><input type="date" value={form.v2Date} onChange={(e) => set("v2Date", e.target.value)} style={inputStyle()} /></FieldRow>
+            </TwoCol>
+            <TwoCol>
+              <FieldRow label="Neutered Date"><input type="date" value={form.neuteredDate} onChange={(e) => set("neuteredDate", e.target.value)} style={inputStyle()} /></FieldRow>
+              <FieldRow label="Neutered Vet"><input type="text" value={form.neuteredVet} onChange={(e) => set("neuteredVet", e.target.value)} style={inputStyle()} /></FieldRow>
+            </TwoCol>
 
-      {/* Status */}
-      <SectionCard title="Status">
-        <FieldRow label="Status *">
-          <select value={status} onChange={(e) => setStatus(e.target.value)} style={inputStyle(!!errors.status)}>
-            <option value="">— Select —</option>
-            {STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
-          <ErrorMsg msg={errors.status} />
-        </FieldRow>
-        <FieldRow label="Current Location">
-          <input type="text" value={form.currentLocation} onChange={(e) => set("currentLocation", e.target.value)} placeholder='"Foster Care", "Vet", "DAR HQ"' style={inputStyle()} />
-        </FieldRow>
+            {species === "CAT" && (
+              <div style={{ background: "#fef9ec", border: "1px solid #fde68a", borderRadius: 6, padding: "10px 12px", marginTop: 4 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#92400e", marginBottom: 8 }}>Cat-specific</div>
+                <TwoCol>
+                  <FieldRow label="FIV Result">
+                    <select value={form.fivResult} onChange={(e) => set("fivResult", e.target.value)} style={inputStyle()}>
+                      <option value="">— Select —</option>
+                      {TEST_RESULT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                    </select>
+                  </FieldRow>
+                  <FieldRow label="FeLV Result">
+                    <select value={form.felvResult} onChange={(e) => set("felvResult", e.target.value)} style={inputStyle()}>
+                      <option value="">— Select —</option>
+                      {TEST_RESULT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                    </select>
+                  </FieldRow>
+                </TwoCol>
+              </div>
+            )}
 
-        {isTerminal && (
-          <div style={{ background: "#fce7f3", border: "1px solid #f9a8d4", borderRadius: 6, padding: "10px 12px", marginTop: 8 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "#9d174d", marginBottom: 8 }}>Departure details — required</div>
-            <FieldRow label="Departure Date *">
-              <input type="date" value={form.departureDate} onChange={(e) => set("departureDate", e.target.value)} style={inputStyle(!!errors.departureDate)} />
-              <ErrorMsg msg={errors.departureDate} />
-            </FieldRow>
-            <FieldRow label="Disposal Method *">
-              <select value={form.disposalMethod} onChange={(e) => set("disposalMethod", e.target.value)} style={inputStyle(!!errors.disposalMethod)}>
-                <option value="">— Select —</option>
-                {DISPOSAL_METHOD_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-              </select>
-              <ErrorMsg msg={errors.disposalMethod} />
-            </FieldRow>
-          </div>
-        )}
-      </SectionCard>
-
-      {/* Notes */}
-      <SectionCard title="Notes">
-        <textarea value={form.notes} onChange={(e) => set("notes", e.target.value)}
-          placeholder='"Afraid of males", "Only pet household", "Not suitable for young children"'
-          rows={4}
-          style={{ width: "100%", padding: "6px 10px", border: "1px solid #d1d5db", borderRadius: 5, fontSize: 13, boxSizing: "border-box", resize: "vertical", fontFamily: "inherit" }} />
-      </SectionCard>
-
-      {/* Legacy Notes — read-only */}
-      {animal?.legacyNotes != null && (
-        <div style={{ border: "1px dashed #d1d5db", borderRadius: 8, padding: "12px 16px", backgroundColor: "#f9fafb", marginBottom: 12 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
-            Legacy Notes — read-only
-          </div>
-          <p style={{ margin: 0, fontSize: 12, color: "#6b7280", whiteSpace: "pre-wrap" }}>{animal.legacyNotes}</p>
+            {species === "DOG" && (
+              <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 6, padding: "10px 12px", marginTop: 4 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#1d4ed8", marginBottom: 8 }}>Dog-specific</div>
+                <TwoCol>
+                  <FieldRow label="Kennel Cough Date"><input type="date" value={form.kennelCoughDate} onChange={(e) => set("kennelCoughDate", e.target.value)} style={inputStyle()} /></FieldRow>
+                  <FieldRow label="Rabies Date"><input type="date" value={form.rabiesDate} onChange={(e) => set("rabiesDate", e.target.value)} style={inputStyle()} /></FieldRow>
+                </TwoCol>
+                <FieldRow label="Condition">
+                  <select value={form.condition} onChange={(e) => set("condition", e.target.value)} style={inputStyle()}>
+                    <option value="">— Select —</option>
+                    {CONDITION_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                  </select>
+                </FieldRow>
+              </div>
+            )}
+          </SectionCard>
         </div>
-      )}
 
-      {/* Submit */}
+        {/* Right column: Intake + Status + Notes */}
+        <div>
+          <SectionCard title="Intake">
+            <TwoCol>
+              <FieldRow label="Intake Date *">
+                <input type="date" value={form.intakeDate} onChange={(e) => set("intakeDate", e.target.value)} style={inputStyle(!!errors.intakeDate)} />
+                <ErrorMsg msg={errors.intakeDate} />
+              </FieldRow>
+              <FieldRow label="Intake Source *">
+                <select value={intakeSource}
+                  onChange={(e) => { setIntakeSource(e.target.value); if (e.target.value !== "STRAY") set("strayLocation", ""); }}
+                  style={inputStyle(!!errors.intakeSource)}>
+                  <option value="">— Select —</option>
+                  {INTAKE_SOURCE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+                <ErrorMsg msg={errors.intakeSource} />
+              </FieldRow>
+            </TwoCol>
+            {intakeSource === "STRAY" && (
+              <FieldRow label="Stray Location *">
+                <input type="text" value={form.strayLocation} onChange={(e) => set("strayLocation", e.target.value)} style={inputStyle(!!errors.strayLocation)} />
+                <ErrorMsg msg={errors.strayLocation} />
+              </FieldRow>
+            )}
+            <TwoCol>
+              <FieldRow label="DAR Ref Number">
+                <input type="text" value={form.darRefNumber} onChange={(e) => set("darRefNumber", e.target.value)} style={inputStyle()} />
+              </FieldRow>
+              <FieldRow label="Vet Ref Number">
+                <input type="text" value={form.vetRefNumber} onChange={(e) => set("vetRefNumber", e.target.value)} style={inputStyle()} />
+              </FieldRow>
+            </TwoCol>
+            <FieldRow label="Info Source">
+              <input type="text" value={form.infoSource} onChange={(e) => set("infoSource", e.target.value)} style={inputStyle()} />
+            </FieldRow>
+          </SectionCard>
+
+          <SectionCard title="Status">
+            <TwoCol>
+              <FieldRow label="Status *">
+                <select value={status} onChange={(e) => setStatus(e.target.value)} style={inputStyle(!!errors.status)}>
+                  <option value="">— Select —</option>
+                  {STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+                <ErrorMsg msg={errors.status} />
+              </FieldRow>
+              <FieldRow label="Current Location">
+                <input type="text" value={form.currentLocation} onChange={(e) => set("currentLocation", e.target.value)} placeholder='"Foster Care", "Vet"' style={inputStyle()} />
+              </FieldRow>
+            </TwoCol>
+
+            {isTerminal && (
+              <div style={{ background: "#fce7f3", border: "1px solid #f9a8d4", borderRadius: 6, padding: "10px 12px", marginTop: 4 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#9d174d", marginBottom: 8 }}>Departure details — required</div>
+                <TwoCol>
+                  <FieldRow label="Departure Date *">
+                    <input type="date" value={form.departureDate} onChange={(e) => set("departureDate", e.target.value)} style={inputStyle(!!errors.departureDate)} />
+                    <ErrorMsg msg={errors.departureDate} />
+                  </FieldRow>
+                  <FieldRow label="Disposal Method *">
+                    <select value={form.disposalMethod} onChange={(e) => set("disposalMethod", e.target.value)} style={inputStyle(!!errors.disposalMethod)}>
+                      <option value="">— Select —</option>
+                      {DISPOSAL_METHOD_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                    </select>
+                    <ErrorMsg msg={errors.disposalMethod} />
+                  </FieldRow>
+                </TwoCol>
+              </div>
+            )}
+          </SectionCard>
+
+          <SectionCard title="Notes">
+            <textarea value={form.notes} onChange={(e) => set("notes", e.target.value)}
+              placeholder='"Afraid of males", "Only pet household", "Not suitable for young children"'
+              rows={4}
+              style={{ width: "100%", padding: "6px 10px", border: "1px solid #d1d5db", borderRadius: 5, fontSize: 13, boxSizing: "border-box", resize: "vertical", fontFamily: "inherit" }} />
+          </SectionCard>
+
+          {/* Legacy Notes — read-only */}
+          {animal?.legacyNotes != null && (
+            <div style={{ border: "1px dashed #d1d5db", borderRadius: 8, padding: "12px 16px", backgroundColor: "#f9fafb" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
+                Legacy Notes — read-only
+              </div>
+              <p style={{ margin: 0, fontSize: 12, color: "#6b7280", whiteSpace: "pre-wrap" }}>{animal.legacyNotes}</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Submit — full width */}
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 16 }}>
         <button type="button" onClick={handleCancel}
           style={{ padding: "8px 18px", borderRadius: 6, backgroundColor: "#fff", color: "#374151", border: "1px solid #d1d5db", fontSize: 13, cursor: "pointer" }}>

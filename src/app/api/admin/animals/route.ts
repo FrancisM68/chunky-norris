@@ -130,8 +130,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const db = getTenantClient("dar");
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any;
   try {
-    const body = await req.json();
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  try {
     const errors = validateAnimalBody(body);
     if (Object.keys(errors).length > 0) {
       return NextResponse.json({ error: "Validation failed", fields: errors }, { status: 422 });

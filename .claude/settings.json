@@ -1,5 +1,24 @@
 {
   "enabledPlugins": {
     "claude-hud@claude-hud": true
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.resume();process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const f=JSON.parse(d).tool_input?.file_path||'';if(f.endsWith('.prisma')){require('child_process').execSync('npx prisma generate',{stdio:'inherit'})}})\" 2>/dev/null || true",
+            "statusMessage": "Regenerating Prisma client..."
+          },
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.resume();process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const f=JSON.parse(d).tool_input?.file_path||'';if(/\\.(ts|tsx)$/.test(f)){require('child_process').spawn('npx',['tsc','--noEmit'],{stdio:'ignore',detached:true,shell:true}).unref()}})\" 2>/dev/null || true",
+            "async": true
+          }
+        ]
+      }
+    ]
   }
 }

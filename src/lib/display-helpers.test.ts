@@ -1,5 +1,14 @@
 import { describe, it, expect } from "vitest";
-import { speciesLabel, genderLabel, statusLabel, statusPillStyle, disposalMethodLabel } from "./display-helpers";
+import {
+  speciesLabel,
+  genderLabel,
+  statusLabel,
+  statusPillStyle,
+  disposalMethodLabel,
+  medicationTypeLabel,
+  dosageUnitLabel,
+  medicationDisposalLabel,
+} from "./display-helpers";
 
 describe("speciesLabel", () => {
   it("returns 'Cat' for CAT", () => expect(speciesLabel("CAT")).toBe("Cat"));
@@ -82,4 +91,41 @@ describe("disposalMethodLabel", () => {
   it("returns 'Died in Care' for DIED_IN_CARE", () => expect(disposalMethodLabel("DIED_IN_CARE")).toBe("Died in Care"));
   it("returns 'TNR Returned' for TNR_RETURNED", () => expect(disposalMethodLabel("TNR_RETURNED")).toBe("TNR Returned"));
   it("returns 'Transferred' for TRANSFERRED", () => expect(disposalMethodLabel("TRANSFERRED")).toBe("Transferred"));
+});
+
+describe("medicationTypeLabel", () => {
+  it("returns 'Deworming' for DEWORMING", () => expect(medicationTypeLabel("DEWORMING")).toBe("Deworming"));
+  it("returns 'Flea Treatment' for FLEA_TREATMENT", () => expect(medicationTypeLabel("FLEA_TREATMENT")).toBe("Flea Treatment"));
+  it("returns 'Tick Treatment' for TICK_TREATMENT", () => expect(medicationTypeLabel("TICK_TREATMENT")).toBe("Tick Treatment"));
+  it("returns 'Vaccination' for VACCINATION", () => expect(medicationTypeLabel("VACCINATION")).toBe("Vaccination"));
+  it("returns 'Antibiotic' for ANTIBIOTIC", () => expect(medicationTypeLabel("ANTIBIOTIC")).toBe("Antibiotic"));
+  it("returns 'Anti-inflammatory' for ANTI_INFLAMMATORY", () => expect(medicationTypeLabel("ANTI_INFLAMMATORY")).toBe("Anti-inflammatory"));
+  it("returns 'Eye Drops' for EYE_DROPS", () => expect(medicationTypeLabel("EYE_DROPS")).toBe("Eye Drops"));
+  it("returns 'Ear Drops' for EAR_DROPS", () => expect(medicationTypeLabel("EAR_DROPS")).toBe("Ear Drops"));
+  it("returns 'Long-term Medication' for LONG_TERM_MEDICATION", () => expect(medicationTypeLabel("LONG_TERM_MEDICATION")).toBe("Long-term Medication"));
+  it("returns 'Other' for OTHER", () => expect(medicationTypeLabel("OTHER")).toBe("Other"));
+  it("returns raw value for unknown type", () => expect(medicationTypeLabel("UNKNOWN_TYPE")).toBe("UNKNOWN_TYPE"));
+});
+
+describe("dosageUnitLabel", () => {
+  it("returns 'ml' for ML", () => expect(dosageUnitLabel("ML")).toBe("ml"));
+  it("returns 'mg' for MG", () => expect(dosageUnitLabel("MG")).toBe("mg"));
+  it("returns 'tablet' for TABLET", () => expect(dosageUnitLabel("TABLET")).toBe("tablet"));
+  it("returns '½ tablet' for HALF_TABLET", () => expect(dosageUnitLabel("HALF_TABLET")).toBe("½ tablet"));
+  it("returns 'pipette' for PIPETTE", () => expect(dosageUnitLabel("PIPETTE")).toBe("pipette"));
+  it("returns 'spot-on' for SPOT_ON", () => expect(dosageUnitLabel("SPOT_ON")).toBe("spot-on"));
+  it("returns 'spray dose' for SPRAY_DOSE", () => expect(dosageUnitLabel("SPRAY_DOSE")).toBe("spray dose"));
+  it("returns 'other' for OTHER", () => expect(dosageUnitLabel("OTHER")).toBe("other"));
+});
+
+describe("medicationDisposalLabel", () => {
+  it("returns 'Administered in full' for ADMINISTERED_IN_FULL", () =>
+    expect(medicationDisposalLabel("ADMINISTERED_IN_FULL")).toBe("Administered in full"));
+  it("returns 'Partial — returned to stock' for PARTIAL_RETURNED", () =>
+    expect(medicationDisposalLabel("PARTIAL_RETURNED")).toBe("Partial — returned to stock"));
+  it("returns 'Remainder disposed of' for DISPOSED_OF", () =>
+    expect(medicationDisposalLabel("DISPOSED_OF")).toBe("Remainder disposed of"));
+  it("returns 'Course ongoing' for COURSE_ONGOING", () =>
+    expect(medicationDisposalLabel("COURSE_ONGOING")).toBe("Course ongoing"));
+  it("returns raw value for unknown disposal", () => expect(medicationDisposalLabel("UNKNOWN")).toBe("UNKNOWN"));
 });

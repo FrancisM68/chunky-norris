@@ -65,3 +65,43 @@ export function disposalMethodLabel(method: string): string {
   };
   return map[method] ?? method;
 }
+
+export function medicationTypeLabel(type: string): string {
+  const map: Record<string, string> = {
+    DEWORMING: "Deworming",
+    FLEA_TREATMENT: "Flea Treatment",
+    TICK_TREATMENT: "Tick Treatment",
+    VACCINATION: "Vaccination",
+    ANTIBIOTIC: "Antibiotic",
+    ANTI_INFLAMMATORY: "Anti-inflammatory",
+    EYE_DROPS: "Eye Drops",
+    EAR_DROPS: "Ear Drops",
+    LONG_TERM_MEDICATION: "Long-term Medication",
+    OTHER: "Other",
+  };
+  return map[type] ?? type;
+}
+
+export function dosageUnitLabel(unit: string): string {
+  const map: Record<string, string> = {
+    ML: "ml",
+    MG: "mg",
+    TABLET: "tablet",
+    HALF_TABLET: "½ tablet",
+    PIPETTE: "pipette",
+    SPOT_ON: "spot-on",
+    SPRAY_DOSE: "spray dose",
+    OTHER: "other",
+  };
+  return map[unit] ?? unit;
+}
+
+export function medicationDisposalLabel(disposal: string): string {
+  const map: Record<string, string> = {
+    ADMINISTERED_IN_FULL: "Administered in full",
+    PARTIAL_RETURNED: "Partial — returned to stock",
+    DISPOSED_OF: "Remainder disposed of",
+    COURSE_ONGOING: "Course ongoing",
+  };
+  return map[disposal] ?? disposal;
+}

@@ -95,18 +95,21 @@ The first slice that actually works end-to-end.
 **Significance:** Proves the architecture works. First moment DAR
 could theoretically use this instead of paper notebooks.
 
-### v0.2.0 — Auth + Animal Register (End of Day 3–4) 🚧 In Progress
+### v0.2.0 — Auth + Animal Register (End of Day 3–4) ✅ Released 2026-04-02
 - ✅ Real login — Auth.js v5 credentials, no more localStorage hack
 - ✅ Admin shell — sidebar (DAR green), role-guarded layout, header
 - ✅ Animal list page — searchable, filterable, In Care / All Animals toggle
 - ✅ GET /api/admin/animals — scope + search, 8 tests
 - ✅ Display helpers — species/gender/status labels + pill styles, 30 tests
 - ✅ Stub pages — Treatments, TNR, Volunteers, Animal detail, New animal
-- ✅ Add/edit animal form — species-driven field visibility, P0 departure fields, inline view/edit toggle
+- ✅ Add/edit animal form — species-driven field visibility, P0 departure fields, inline view/edit toggle, 2-column layout
 - ✅ POST /api/admin/animals + PATCH /api/admin/animals/[id] + GET /api/admin/animals/[id] — 22 tests
 - ✅ fix(tenant): await search_path on connect — prevented schema race condition on new DB connections
-- ⬜ Treatment history page per animal
-**Significance:** Lisa can log in, see and manage all of DAR's animals.
+- ✅ Treatment history page per animal — 30-day compliance warning, summary stats, full log table
+- ✅ Global treatments page — overdue compliance list + recent feed with species
+- ✅ Treatment display helpers — medicationTypeLabel, dosageUnitLabel, medicationDisposalLabel — 20 tests
+- ✅ GET /api/admin/animals/[id]/treatments — 7 tests
+**Significance:** Lisa can log in, see and manage all of DAR's animals. 110 tests passing.
 
 ### v0.3.0 — Real Data (End of Day 5)
 - 1,172 cat records imported from Excel
