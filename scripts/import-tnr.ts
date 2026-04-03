@@ -178,3 +178,95 @@ export async function upsertVolunteers(
   console.log(`\nVolunteers: ${created} created, ${matched} matched`)
   return volMap
 }
+
+// ── Phase 2: TNR record import ───────────────────────────────────────────────
+
+export async function importTnrRecords(
+  db: Awaited<ReturnType<typeof getTenantClient>>,
+  rows: Record<string, unknown>[],
+  volMap: Map<string, string>,
+  dryRun: boolean,
+  warnings: string[],
+): Promise<{ imported: number; skipped: number }> {
+  let imported = 0
+  let skipped = 0
+
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i]
+    const rowNum = i + 2 // 1-based, +1 for header row
+
+    const rawLocation = row[COL.locationName]
+    const locationName =
+      rawLocation === null || rawLocation === undefined || String(rawLocation).trim() === ''
+        ? 'Not recorded'
+        : String(rawLocation).trim()
+
+    if (locationName === 'Not recorded') {
+      warnings.push(`Row ${rowNum}: no locationName — stored as "Not recorded"`)
+    }
+
+    const dateIntoDar = parseExcelDate(row[COL.dateIntoDar], rowNum, 'DATE INTO DAR', warnings)
+    const dateOutOfDar = parseExcelDate(row[COL.dateOutOfDar], rowNum, 'DATE OUT OF DAR', warnings)
+    const dateNeutered = parseExcelDate(row[COL.dateNeutered], rowNum, 'DATE NEUTERED', warnings)
+
+    if (dateIntoDar === null) {
+      warnings.push(`Row ${rowNum}: missing DATE INTO DAR — stored as 1970-01-01 sentinel`)
+    }
+
+    // Deduplication check
+    const existing = await db.tNRRecord.findFirst({
+      where: {
+        locationName,
+        dateIntoDar: dateIntoDar ?? undefined,
+      },
+    })
+
+    if (existing) {
+      skipped++
+      continue
+    }
+
+    const vol1Name = row[COL.vol1] as string | null
+    const vol2Name = row[COL.vol2] as string | null
+    const volunteer1Id = vol1Name ? volMap.get(vol1Name) ?? null : null
+    const volunteer2Id = vol2Name ? volMap.get(vol2Name) ?? null : null
+
+    const elapsedRaw = row[COL.elapsedDays]
+    const elapsedDays =
+      typeof elapsedRaw === 'number' && elapsedRaw > 0 ? Math.round(elapsedRaw) : null
+
+    if (dryRun) {
+      console.log(`  [dry-run] Would import row ${rowNum}: ${locationName}`)
+      imported++
+      continue
+    }
+
+    await db.tNRRecord.create({
+      data: {
+        locationName,
+        county: (row[COL.county] as string | null) ?? 'LOUTH',
+        contactName: (row[COL.contactName] as string | null) ?? null,
+        contactNumber: (row[COL.contactNumber] as string | null) ?? null,
+        vetHospital: (row[COL.vetHospital] as string | null) ?? null,
+        apRefNumber: (row[COL.apRefNumber] as string | null) ?? null,
+        ageEstimate: (row[COL.ageEstimate] as string | null) ?? null,
+        coatColour: (row[COL.coatColour] as string | null) ?? null,
+        elapsedDays,
+        notes: (row[COL.notes] as string | null) ?? null,
+        sex: parseSex(row[COL.sex]),
+        fivResult: parseFivFelv(row[COL.fivResult]),
+        felvResult: parseFivFelv(row[COL.felvResult]),
+        status: parseStatus(row[COL.status], rowNum, warnings),
+        outcome: parseOutcome(row[COL.outcome], rowNum, warnings),
+        dateIntoDar: dateIntoDar ?? new Date('1970-01-01'), // fallback: required field
+        dateOutOfDar,
+        dateNeutered,
+        volunteer1Id,
+        volunteer2Id,
+      },
+    })
+    imported++
+  }
+
+  return { imported, skipped }
+}
