@@ -191,3 +191,98 @@ export function parseFivFelv(value: unknown): TestResult {
   if (value === '-ve') return 'NEGATIVE'
   return 'NOT_TESTED'
 }
+
+// ── DAR volunteer names (from DAR VOLUNTEER column — 10 unique values) ────────
+const DAR_VOLUNTEER_NAMES = [
+  'E. Howell', 'F. Connor', 'F. Cunningham', 'K. Brennan',
+  'L. Hewitt', 'L. Martinez', 'P. Maquire', 'P. McDowell',
+  'R. Borghi', 'S. Murphy',
+]
+
+// ── Phase 1: DAR volunteer upsert ────────────────────────────────────────────
+
+export async function upsertDarVolunteers(
+  db: Awaited<ReturnType<typeof getTenantClient>>,
+  dryRun: boolean,
+): Promise<Map<string, string>> {
+  const volMap = new Map<string, string>() // Excel name → volunteer ID
+  let created = 0
+  let matched = 0
+
+  for (const raw of DAR_VOLUNTEER_NAMES) {
+    const { firstName, lastName } = parseVolunteerName(raw)
+    const existing = await db.volunteer.findFirst({ where: { firstName, lastName } })
+
+    if (existing) {
+      volMap.set(raw, existing.id)
+      matched++
+      console.log(`  Matched DAR vol: ${raw} → ${existing.firstName} ${existing.lastName} (${existing.id})`)
+    } else if (dryRun) {
+      console.log(`  [dry-run] Would create DAR volunteer: ${firstName} ${lastName}`)
+      volMap.set(raw, `dry-run-${raw}`)
+      created++
+    } else {
+      const vol = await db.volunteer.create({
+        data: { firstName, lastName, roles: ['VOLUNTEER'] },
+      })
+      volMap.set(raw, vol.id)
+      created++
+      console.log(`  Created DAR vol: ${raw} → ${vol.id}`)
+    }
+  }
+
+  console.log(`\nDAR volunteers: ${created} created, ${matched} matched`)
+  return volMap
+}
+
+// ── Phase 2: Fosterer upsert ──────────────────────────────────────────────────
+
+export async function upsertFosterers(
+  db: Awaited<ReturnType<typeof getTenantClient>>,
+  rows: Record<string, unknown>[],
+  darVolMap: Map<string, string>,
+  dryRun: boolean,
+): Promise<Map<string, string>> {
+  const fosterMap = new Map<string, string>() // Excel name → volunteer ID
+  let created = 0
+  let matched = 0
+
+  // Collect unique fosterer names from all rows
+  const uniqueFosterers = [
+    ...new Set(
+      rows
+        .map((r) => r[COL.fosterer] as string | null)
+        .filter((v): v is string => Boolean(v)),
+    ),
+  ]
+
+  for (const raw of uniqueFosterers) {
+    // If already resolved in Phase 1, reuse that record
+    if (darVolMap.has(raw)) {
+      fosterMap.set(raw, darVolMap.get(raw)!)
+      matched++
+      continue
+    }
+
+    const { firstName, lastName } = parseVolunteerName(raw)
+    const existing = await db.volunteer.findFirst({ where: { firstName, lastName } })
+
+    if (existing) {
+      fosterMap.set(raw, existing.id)
+      matched++
+    } else if (dryRun) {
+      console.log(`  [dry-run] Would create fosterer: ${firstName} ${lastName}`)
+      fosterMap.set(raw, `dry-run-${raw}`)
+      created++
+    } else {
+      const vol = await db.volunteer.create({
+        data: { firstName, lastName, roles: ['FOSTER'] },
+      })
+      fosterMap.set(raw, vol.id)
+      created++
+    }
+  }
+
+  console.log(`Fosterers: ${created} created, ${matched} matched`)
+  return fosterMap
+}
