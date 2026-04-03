@@ -132,3 +132,49 @@ export function parseOutcome(value: unknown, rowNum: number, warnings: string[])
       return null
   }
 }
+
+// ── Phase 1: Volunteer upsert ────────────────────────────────────────────────
+
+const EXCEL_VOLUNTEER_NAMES = [
+  'L MARTINEZ',
+  'E HOWELL',
+  'E MCDONNELL',
+  'F CONNOR',
+  'N. CARNEY',
+  'P MCDOWELL',
+  'R BORGHI',
+]
+
+export async function upsertVolunteers(
+  db: Awaited<ReturnType<typeof getTenantClient>>,
+  dryRun: boolean,
+): Promise<Map<string, string>> {
+  const volMap = new Map<string, string>() // Excel abbrev → volunteer ID
+  let created = 0
+  let matched = 0
+
+  for (const excelName of EXCEL_VOLUNTEER_NAMES) {
+    const { firstName, lastName } = parseVolunteerName(excelName)
+    const existing = await db.volunteer.findFirst({ where: { firstName, lastName } })
+
+    if (existing) {
+      volMap.set(excelName, existing.id)
+      matched++
+      console.log(`  Matched: ${excelName} → ${existing.firstName} ${existing.lastName} (${existing.id})`)
+    } else if (dryRun) {
+      console.log(`  [dry-run] Would create volunteer: ${firstName} ${lastName}`)
+      volMap.set(excelName, `dry-run-${excelName}`)
+      created++
+    } else {
+      const vol = await db.volunteer.create({
+        data: { firstName, lastName, roles: ['VOLUNTEER'] },
+      })
+      volMap.set(excelName, vol.id)
+      created++
+      console.log(`  Created: ${excelName} → ${vol.id}`)
+    }
+  }
+
+  console.log(`\nVolunteers: ${created} created, ${matched} matched`)
+  return volMap
+}
