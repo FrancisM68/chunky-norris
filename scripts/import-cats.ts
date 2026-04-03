@@ -270,6 +270,7 @@ export async function upsertFosterers(
     if (existing) {
       fosterMap.set(raw, existing.id)
       matched++
+      console.log(`  Matched fosterer: ${raw} → ${existing.firstName} ${existing.lastName} (${existing.id})`)
     } else if (dryRun) {
       console.log(`  [dry-run] Would create fosterer: ${firstName} ${lastName}`)
       fosterMap.set(raw, `dry-run-${raw}`)
