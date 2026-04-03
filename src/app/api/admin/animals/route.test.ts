@@ -207,6 +207,43 @@ describe("GET /api/admin/animals", () => {
     );
   });
 
+  it("filters by full foster name 'First Last' when q= contains a space", async () => {
+    mockAuth.mockResolvedValueOnce(adminSession());
+    mockFindMany.mockResolvedValueOnce([SAMPLE_ANIMALS[1]]);
+
+    const res = await GET(makeRequest("q=Jane+Foster"));
+    expect(res.status).toBe(200);
+
+    const callArgs = mockFindMany.mock.calls[0][0];
+    expect(callArgs.where.OR).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fosterAssignments: {
+            some: {
+              isActive: true,
+              foster: {
+                AND: [
+                  {
+                    OR: [
+                      { firstName: { contains: "Jane", mode: "insensitive" } },
+                      { lastName: { contains: "Jane", mode: "insensitive" } },
+                    ],
+                  },
+                  {
+                    OR: [
+                      { firstName: { contains: "Foster", mode: "insensitive" } },
+                      { lastName: { contains: "Foster", mode: "insensitive" } },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        }),
+      ])
+    );
+  });
+
   it("calculates daysInCare for each animal in the response", async () => {
     mockAuth.mockResolvedValueOnce(adminSession());
     mockFindMany.mockResolvedValueOnce([SAMPLE_ANIMALS[2]]);

@@ -14,6 +14,26 @@ function daysInCare(intakeDate: Date, departureDate: Date | null): number {
   );
 }
 
+function fosterNameFilter(q: string) {
+  const parts = q.split(/\s+/).filter(Boolean);
+  if (parts.length <= 1) {
+    return {
+      OR: [
+        { firstName: { contains: q, mode: "insensitive" as const } },
+        { lastName: { contains: q, mode: "insensitive" as const } },
+      ],
+    };
+  }
+  return {
+    AND: parts.map((part) => ({
+      OR: [
+        { firstName: { contains: part, mode: "insensitive" as const } },
+        { lastName: { contains: part, mode: "insensitive" as const } },
+      ],
+    })),
+  };
+}
+
 // ---------------------------------------------------------------------------
 // GET /api/admin/animals?scope=in_care|all&q=searchterm
 // ---------------------------------------------------------------------------
@@ -51,16 +71,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
                   fosterAssignments: {
                     some: {
                       isActive: true,
-                      foster: {
-                        OR: [
-                          {
-                            firstName: { contains: q, mode: "insensitive" },
-                          },
-                          {
-                            lastName: { contains: q, mode: "insensitive" },
-                          },
-                        ],
-                      },
+                      foster: fosterNameFilter(q),
                     },
                   },
                 },

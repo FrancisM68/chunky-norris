@@ -38,6 +38,28 @@ function daysInCare(intakeDate: Date, departureDate: Date | null): number {
   );
 }
 
+// Matches "E Howell" or "P McDowell" by AND-ing each word against both name fields.
+// Single-word queries fall back to a simple OR.
+function fosterNameFilter(q: string) {
+  const parts = q.split(/\s+/).filter(Boolean);
+  if (parts.length <= 1) {
+    return {
+      OR: [
+        { firstName: { contains: q, mode: "insensitive" as const } },
+        { lastName: { contains: q, mode: "insensitive" as const } },
+      ],
+    };
+  }
+  return {
+    AND: parts.map((part) => ({
+      OR: [
+        { firstName: { contains: part, mode: "insensitive" as const } },
+        { lastName: { contains: part, mode: "insensitive" as const } },
+      ],
+    })),
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Data fetching
 // ---------------------------------------------------------------------------
@@ -59,12 +81,7 @@ async function fetchAnimals(scope: string, q: string): Promise<AnimalRow[]> {
                 fosterAssignments: {
                   some: {
                     isActive: true,
-                    foster: {
-                      OR: [
-                        { firstName: { contains: q, mode: "insensitive" as const } },
-                        { lastName: { contains: q, mode: "insensitive" as const } },
-                      ],
-                    },
+                    foster: fosterNameFilter(q),
                   },
                 },
               },
