@@ -105,3 +105,54 @@ export function medicationDisposalLabel(disposal: string): string {
   };
   return map[disposal] ?? disposal;
 }
+
+export function tnrStatusLabel(status: string): string {
+  const map: Record<string, string> = {
+    IN_PROGRESS: "In Progress",
+    COMPLETED: "Completed",
+    ON_HOLD: "On Hold",
+  };
+  return map[status] ?? status;
+}
+
+export function tnrStatusPillStyle(status: string): {
+  backgroundColor: string;
+  color: string;
+} {
+  const map: Record<string, { backgroundColor: string; color: string }> = {
+    IN_PROGRESS: { backgroundColor: "#fff3e0", color: "#e65100" },
+    COMPLETED: { backgroundColor: "#f0fdf4", color: "#15803d" },
+    ON_HOLD: { backgroundColor: "#f3f4f6", color: "#6b7280" },
+  };
+  return map[status] ?? { backgroundColor: "#f3f4f6", color: "#374151" };
+}
+
+export function tnrOutcomeLabel(outcome: string): string {
+  const map: Record<string, string> = {
+    RETURNED_RELEASED: "Returned / Released",
+    REHOMED: "Rehomed",
+    EUTHANISED: "PTS",
+    DIED_IN_CARE: "Passed Away",
+    TRANSFERRED: "Transferred",
+  };
+  return map[outcome] ?? outcome;
+}
+
+export function tnrSexLabel(sex: string): string {
+  const map: Record<string, string> = {
+    FEMALE_INTACT: "Female",
+    MALE_INTACT: "Male",
+    UNKNOWN: "Unknown",
+  };
+  return map[sex] ?? sex;
+}
+
+export function fivFelvLabel(fiv: string, felv: string): string {
+  const fmt = (v: string) =>
+    v === "POSITIVE" ? "+" : v === "NEGATIVE" ? "–" : "n/t";
+
+  // Both not tested — compact form
+  if (fiv === "NOT_TESTED" && felv === "NOT_TESTED") return "n/t";
+
+  return `${fmt(fiv)}/${fmt(felv)}`;
+}

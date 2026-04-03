@@ -8,6 +8,11 @@ import {
   medicationTypeLabel,
   dosageUnitLabel,
   medicationDisposalLabel,
+  tnrStatusLabel,
+  tnrStatusPillStyle,
+  tnrOutcomeLabel,
+  tnrSexLabel,
+  fivFelvLabel,
 } from "./display-helpers";
 
 describe("speciesLabel", () => {
@@ -128,4 +133,85 @@ describe("medicationDisposalLabel", () => {
   it("returns 'Course ongoing' for COURSE_ONGOING", () =>
     expect(medicationDisposalLabel("COURSE_ONGOING")).toBe("Course ongoing"));
   it("returns raw value for unknown disposal", () => expect(medicationDisposalLabel("UNKNOWN")).toBe("UNKNOWN"));
+});
+
+describe("tnrStatusLabel", () => {
+  it("returns 'In Progress' for IN_PROGRESS", () =>
+    expect(tnrStatusLabel("IN_PROGRESS")).toBe("In Progress"));
+  it("returns 'Completed' for COMPLETED", () =>
+    expect(tnrStatusLabel("COMPLETED")).toBe("Completed"));
+  it("returns 'On Hold' for ON_HOLD", () =>
+    expect(tnrStatusLabel("ON_HOLD")).toBe("On Hold"));
+  it("returns the raw value for unknown status", () =>
+    expect(tnrStatusLabel("UNKNOWN_VAL")).toBe("UNKNOWN_VAL"));
+});
+
+describe("tnrStatusPillStyle", () => {
+  it("returns amber colours for IN_PROGRESS", () => {
+    const style = tnrStatusPillStyle("IN_PROGRESS");
+    expect(style.backgroundColor).toBe("#fff3e0");
+    expect(style.color).toBe("#e65100");
+  });
+  it("returns green colours for COMPLETED", () => {
+    const style = tnrStatusPillStyle("COMPLETED");
+    expect(style.backgroundColor).toBe("#f0fdf4");
+    expect(style.color).toBe("#15803d");
+  });
+  it("returns grey colours for ON_HOLD", () => {
+    const style = tnrStatusPillStyle("ON_HOLD");
+    expect(style.backgroundColor).toBe("#f3f4f6");
+    expect(style.color).toBe("#6b7280");
+  });
+  it("returns fallback grey for unknown status", () => {
+    const style = tnrStatusPillStyle("UNKNOWN_VAL");
+    expect(style.backgroundColor).toBe("#f3f4f6");
+    expect(style.color).toBe("#374151");
+  });
+});
+
+describe("tnrOutcomeLabel", () => {
+  it("returns 'Returned / Released' for RETURNED_RELEASED", () =>
+    expect(tnrOutcomeLabel("RETURNED_RELEASED")).toBe("Returned / Released"));
+  it("returns 'Rehomed' for REHOMED", () =>
+    expect(tnrOutcomeLabel("REHOMED")).toBe("Rehomed"));
+  it("returns 'PTS' for EUTHANISED", () =>
+    expect(tnrOutcomeLabel("EUTHANISED")).toBe("PTS"));
+  it("returns 'Passed Away' for DIED_IN_CARE", () =>
+    expect(tnrOutcomeLabel("DIED_IN_CARE")).toBe("Passed Away"));
+  it("returns 'Transferred' for TRANSFERRED", () =>
+    expect(tnrOutcomeLabel("TRANSFERRED")).toBe("Transferred"));
+  it("returns the raw value for unknown outcome", () =>
+    expect(tnrOutcomeLabel("SOMETHING_ELSE")).toBe("SOMETHING_ELSE"));
+});
+
+describe("tnrSexLabel", () => {
+  it("returns 'Female' for FEMALE_INTACT", () =>
+    expect(tnrSexLabel("FEMALE_INTACT")).toBe("Female"));
+  it("returns 'Male' for MALE_INTACT", () =>
+    expect(tnrSexLabel("MALE_INTACT")).toBe("Male"));
+  it("returns 'Unknown' for UNKNOWN", () =>
+    expect(tnrSexLabel("UNKNOWN")).toBe("Unknown"));
+  it("returns raw value for unexpected input", () =>
+    expect(tnrSexLabel("FEMALE_NEUTERED")).toBe("FEMALE_NEUTERED"));
+});
+
+describe("fivFelvLabel", () => {
+  it("returns '–/–' for NEGATIVE/NEGATIVE", () =>
+    expect(fivFelvLabel("NEGATIVE", "NEGATIVE")).toBe("–/–"));
+  it("returns '+/–' for POSITIVE/NEGATIVE", () =>
+    expect(fivFelvLabel("POSITIVE", "NEGATIVE")).toBe("+/–"));
+  it("returns '–/+' for NEGATIVE/POSITIVE", () =>
+    expect(fivFelvLabel("NEGATIVE", "POSITIVE")).toBe("–/+"));
+  it("returns '+/+' for POSITIVE/POSITIVE", () =>
+    expect(fivFelvLabel("POSITIVE", "POSITIVE")).toBe("+/+"));
+  it("returns 'n/t' for NOT_TESTED/NOT_TESTED", () =>
+    expect(fivFelvLabel("NOT_TESTED", "NOT_TESTED")).toBe("n/t"));
+  it("returns '–/n/t' for NEGATIVE/NOT_TESTED", () =>
+    expect(fivFelvLabel("NEGATIVE", "NOT_TESTED")).toBe("–/n/t"));
+  it("returns '+/n/t' for POSITIVE/NOT_TESTED", () =>
+    expect(fivFelvLabel("POSITIVE", "NOT_TESTED")).toBe("+/n/t"));
+  it("returns 'n/t/–' for NOT_TESTED/NEGATIVE", () =>
+    expect(fivFelvLabel("NOT_TESTED", "NEGATIVE")).toBe("n/t/–"));
+  it("returns 'n/t/+' for NOT_TESTED/POSITIVE", () =>
+    expect(fivFelvLabel("NOT_TESTED", "POSITIVE")).toBe("n/t/+"));
 });
