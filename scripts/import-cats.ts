@@ -287,3 +287,196 @@ export async function upsertFosterers(
   console.log(`Fosterers: ${created} created, ${matched} matched`)
   return fosterMap
 }
+
+// ── Phase 3: Animal import ────────────────────────────────────────────────────
+
+export async function importAnimals(
+  db: Awaited<ReturnType<typeof getTenantClient>>,
+  rows: Record<string, unknown>[],
+  darVolMap: Map<string, string>,
+  fosterMap: Map<string, string>,
+  dryRun: boolean,
+  warnings: string[],
+): Promise<{ imported: number; skipped: number }> {
+  // Pre-scan for duplicate microchip numbers within this Excel file.
+  // Any chip that appears more than once is nullified to avoid @unique violations.
+  const chipCounts = new Map<string, number>()
+  for (const row of rows) {
+    const raw = row[COL.microchip]
+    if (raw != null && String(raw).trim() !== '') {
+      const chip = String(raw).trim()
+      chipCounts.set(chip, (chipCounts.get(chip) ?? 0) + 1)
+    }
+  }
+  const duplicateChips = new Set(
+    [...chipCounts.entries()].filter(([, count]) => count > 1).map(([chip]) => chip),
+  )
+
+  let imported = 0
+  let skipped = 0
+
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i]
+    const rowNum = i + 2 // 1-based, +1 for header row
+
+    // ── officialName ──────────────────────────────────────────────────────────
+    const rawName = row[COL.name]
+    const officialName =
+      rawName != null && String(rawName).trim() !== ''
+        ? String(rawName).trim()
+        : 'Not recorded'
+    if (officialName === 'Not recorded') {
+      warnings.push(`Row ${rowNum}: no NAME — stored as "Not recorded"`)
+    }
+
+    // ── dates ─────────────────────────────────────────────────────────────────
+    const dateIntoDar    = parseExcelDate(row[COL.dateIntoDar],  rowNum, 'DATE INTO DAR',  warnings)
+    const dateOutOfDar   = parseExcelDate(row[COL.dateOutOfDar], rowNum, 'DATE OUT OF DAR', warnings)
+    const dateNeutered   = parseExcelDate(row[COL.dateNeutered], rowNum, 'DATE NEUTERED',   warnings)
+    const v1Date         = parseExcelDate(row[COL.v1Date],       rowNum, 'V1 DATE',         warnings)
+    const v2Date         = parseExcelDate(row[COL.v2Date],       rowNum, 'V2 DATE',         warnings)
+    const chipDate       = parseExcelDate(row[COL.chipDate],     rowNum, 'DATE IMPLANTED',  warnings)
+
+    const intakeDate = dateIntoDar ?? new Date('1970-01-01')
+
+    // ── deduplication ─────────────────────────────────────────────────────────
+    const existing = await db.animal.findFirst({
+      where: { officialName, intakeDate },
+    })
+    if (existing) {
+      skipped++
+      continue
+    }
+
+    // ── status + outcome ──────────────────────────────────────────────────────
+    const outcomeResult = parseOutcome(row[COL.outcome], rowNum, warnings)
+    const locationResult = parseStatusFromLocation(row[COL.location])
+
+    const status         = outcomeResult?.status ?? locationResult.status
+    const disposalMethod = outcomeResult?.disposalMethod ?? null
+    const currentLocation = outcomeResult ? null : locationResult.currentLocation
+
+    // ── microchip ─────────────────────────────────────────────────────────────
+    const rawChip = row[COL.microchip]
+    const chipStr = rawChip != null && String(rawChip).trim() !== '' ? String(rawChip).trim() : null
+    let microchipNumber: string | null = chipStr
+    if (chipStr && duplicateChips.has(chipStr)) {
+      warnings.push(`Row ${rowNum}: microchip "${chipStr}" appears on multiple rows — stored as null`)
+      microchipNumber = null
+    }
+
+    // ── totals ────────────────────────────────────────────────────────────────
+    const totalDaysRaw = row[COL.totalDays]
+    const totalDaysInCare =
+      typeof totalDaysRaw === 'number' && totalDaysRaw > 0
+        ? Math.round(totalDaysRaw)
+        : null
+
+    // ── relationships ─────────────────────────────────────────────────────────
+    const darVolRaw = row[COL.darVolunteer] as string | null
+    const addedById = darVolRaw ? (darVolMap.get(darVolRaw) ?? null) : null
+
+    const fostererRaw = row[COL.fosterer] as string | null
+    const fosterId = fostererRaw ? (fosterMap.get(fostererRaw) ?? null) : null
+
+    if (dryRun) {
+      console.log(`  [dry-run] Would import row ${rowNum}: ${officialName}`)
+      imported++
+      continue
+    }
+
+    // ── create Animal ─────────────────────────────────────────────────────────
+    const animal = await db.animal.create({
+      data: {
+        officialName,
+        species:           'CAT',
+        breed:             (row[COL.breed]       as string | null) ?? null,
+        description:       (row[COL.description] as string | null) ?? null,
+        gender:            parseGender(row[COL.gender]),
+        ageAtIntake:       row[COL.ageAtIntake] != null ? String(row[COL.ageAtIntake]) : null,
+        vaccinationStatus: parseVaccinationStatus(row[COL.vacStatus]),
+        v1Date,
+        v2Date,
+        vaccineType:       (row[COL.vaccineType] as string | null) ?? null,
+        neuteredDate:      dateNeutered,
+        fivResult:         parseFivFelv(row[COL.fiv]),
+        felvResult:        parseFivFelv(row[COL.felv]),
+        currentLocation,
+        intakeDate,
+        intakeSource:      parseIntakeSource(row[COL.source], rowNum, warnings),
+        infoSource:        (row[COL.infoSource] as string | null) ?? null,
+        darRefNumber:      row[COL.refNum] != null ? String(row[COL.refNum]) : null,
+        microchipNumber,
+        microchipDate:     chipDate,
+        status,
+        departureDate:     dateOutOfDar,
+        disposalMethod,
+        totalDaysInCare,
+        legacyNotes:       (row[COL.notes] as string | null) ?? null,
+        addedById,
+      },
+    })
+
+    // ── create FosterAssignment ───────────────────────────────────────────────
+    if (fosterId) {
+      await db.fosterAssignment.create({
+        data: {
+          animalId:  animal.id,
+          fosterId,
+          startDate: intakeDate,
+          endDate:   dateOutOfDar,
+          isActive:  !dateOutOfDar,
+        },
+      })
+    } else if (fostererRaw) {
+      warnings.push(`Row ${rowNum}: fosterer "${fostererRaw}" not resolved — FosterAssignment skipped`)
+    }
+
+    imported++
+  }
+
+  return { imported, skipped }
+}
+
+// ── Main ──────────────────────────────────────────────────────────────────────
+
+async function main() {
+  const dryRun = process.argv.includes('--dry-run')
+  if (dryRun) console.log('=== DRY RUN — no database writes ===\n')
+
+  const db = getTenantClient('dar')
+  const warnings: string[] = []
+
+  // Read Excel
+  const wb = XLSX.readFile('Support docs/DAR CAT REGISTER MASTER 06 Sept 2025.xlsx')
+  const ws = wb.Sheets['CAT REGISTER']
+  const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(ws, { defval: null })
+  console.log(`Read ${rows.length} rows from Excel\n`)
+
+  // Phase 1
+  console.log('=== Phase 1: DAR Volunteers ===')
+  const darVolMap = await upsertDarVolunteers(db, dryRun)
+
+  // Phase 2
+  console.log('\n=== Phase 2: Fosterers ===')
+  const fosterMap = await upsertFosterers(db, rows, darVolMap, dryRun)
+
+  // Phase 3
+  console.log('\n=== Phase 3: Animals ===')
+  const { imported, skipped } = await importAnimals(db, rows, darVolMap, fosterMap, dryRun, warnings)
+
+  // Summary
+  console.log('\n=== Summary ===')
+  console.log(`Animals: ${imported} imported, ${skipped} skipped (duplicates)`)
+  if (warnings.length > 0) {
+    console.log(`\nWarnings (${warnings.length}):`)
+    warnings.forEach((w) => console.log(' ', w))
+  } else {
+    console.log('Warnings: 0')
+  }
+}
+
+main().catch((err) => {
+  console.error(err)
+  process.exit(1)
+})
