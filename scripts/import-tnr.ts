@@ -270,3 +270,42 @@ export async function importTnrRecords(
 
   return { imported, skipped }
 }
+
+// ── Main ─────────────────────────────────────────────────────────────────────
+
+async function main() {
+  const dryRun = process.argv.includes('--dry-run')
+  if (dryRun) console.log('=== DRY RUN — no database writes ===\n')
+
+  const db = getTenantClient('dar')
+  const warnings: string[] = []
+
+  // Read Excel
+  const wb = XLSX.readFile('Support docs/DAR TNR ONLY REGISTER.xlsx')
+  const ws = wb.Sheets['TNR ONLY']
+  const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(ws, { defval: null })
+  console.log(`Read ${rows.length} rows from Excel\n`)
+
+  // Phase 1
+  console.log('=== Phase 1: Volunteers ===')
+  const volMap = await upsertVolunteers(db, dryRun)
+
+  // Phase 2
+  console.log('\n=== Phase 2: TNR records ===')
+  const { imported, skipped } = await importTnrRecords(db, rows, volMap, dryRun, warnings)
+
+  // Summary
+  console.log('\n=== Summary ===')
+  console.log(`TNR records: ${imported} imported, ${skipped} skipped (duplicates)`)
+  if (warnings.length > 0) {
+    console.log(`\nWarnings (${warnings.length}):`)
+    warnings.forEach((w) => console.log(' ', w))
+  } else {
+    console.log('Warnings: 0')
+  }
+}
+
+main().catch((err) => {
+  console.error(err)
+  process.exit(1)
+})
