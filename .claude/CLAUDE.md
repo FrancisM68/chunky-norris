@@ -48,6 +48,15 @@ Three distinct interfaces exist in this system:
 
 ---
 
+## UI Development
+Always read `DESIGN.md` in the project root before writing any UI code, 
+components, or page layouts. It defines the colour palette, typography, 
+component styles, and layout rules for both the foster app and admin 
+back-office. Do not use Tailwind default colours (gray, blue, indigo) 
+for any visible UI element.
+
+---
+
 ## Core data model (8 entities)
 
 - **Animal** — Supports cats, dogs, rabbits, ferrets. Dual naming: structured
