@@ -1,26 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=Instrument+Sans:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-heading: 'Fraunces', serif;
+  --font-body: 'Instrument Sans', sans-serif;
+  --color-parchment: #F5F0E8;
+  --color-parchment-dark: #EDE8DF;
+  --color-forest: #2D5A27;
+  --color-forest-dark: #246420;
+  --color-forest-light: #EEF5EC;
+  --color-ink: #1C2A19;
+  --color-sage: #6B7A5E;
+  --color-sage-light: #9AA890;
+  --color-card: #FFFFFF;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-parchment);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.table-row:hover {
+  background-color: #F9F7F3;
 }

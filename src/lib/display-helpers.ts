@@ -41,17 +41,18 @@ export function statusLabel(status: string): string {
 export function statusPillStyle(status: string): {
   backgroundColor: string;
   color: string;
+  border: string;
 } {
-  const map: Record<string, { backgroundColor: string; color: string }> = {
-    IN_CARE: { backgroundColor: "#fff3e0", color: "#e65100" },
-    FOSTERED: { backgroundColor: "#e8f5e9", color: "#2D5A27" },
-    ADOPTED: { backgroundColor: "#e3f2fd", color: "#1565c0" },
-    RETURNED_TO_OWNER: { backgroundColor: "#f3e5f5", color: "#6a1b9a" },
-    EUTHANISED: { backgroundColor: "#fce4ec", color: "#b71c1c" },
-    DIED_IN_CARE: { backgroundColor: "#fce4ec", color: "#b71c1c" },
-    TNR_RETURNED: { backgroundColor: "#f1f8e9", color: "#558b2f" },
+  const map: Record<string, { backgroundColor: string; color: string; border: string }> = {
+    IN_CARE: { backgroundColor: "#EEF5EC", color: "#2D5A27", border: "1px solid #A8D5A2" },
+    FOSTERED: { backgroundColor: "#FFF3CD", color: "#7A5C00", border: "1px solid #F0D060" },
+    ADOPTED: { backgroundColor: "#E8F4FD", color: "#1A5276", border: "1px solid #AED6F1" },
+    RETURNED_TO_OWNER: { backgroundColor: "#F4ECF7", color: "#6C3483", border: "1px solid #D7BDE2" },
+    EUTHANISED: { backgroundColor: "#FDECEA", color: "#922B21", border: "1px solid #F1948A" },
+    DIED_IN_CARE: { backgroundColor: "#FDECEA", color: "#922B21", border: "1px solid #F1948A" },
+    TNR_RETURNED: { backgroundColor: "#F4ECF7", color: "#6C3483", border: "1px solid #D7BDE2" },
   };
-  return map[status] ?? { backgroundColor: "#f3f4f6", color: "#374151" };
+  return map[status] ?? { backgroundColor: "#f3f4f6", color: "#6B7A5E", border: "1px solid rgba(0,0,0,0.1)" };
 }
 
 export function disposalMethodLabel(method: string): string {

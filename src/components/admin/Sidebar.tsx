@@ -27,15 +27,43 @@ export function Sidebar() {
       }}
     >
       {/* Wordmark */}
+      <div style={{ padding: "24px 20px 20px" }}>
+        <div
+          style={{
+            fontFamily: "'Fraunces', serif",
+            fontSize: 20,
+            fontWeight: 600,
+            color: "#fff",
+            lineHeight: 1.2,
+          }}
+        >
+          ChunkyNorris
+        </div>
+        <div
+          style={{
+            fontFamily: "'Instrument Sans', sans-serif",
+            fontSize: 11,
+            color: "rgba(255,255,255,0.55)",
+            marginTop: 2,
+          }}
+        >
+          Drogheda Animal Rescue
+        </div>
+      </div>
+
+      {/* Section label */}
       <div
         style={{
-          padding: "24px 16px 16px",
-          fontSize: 18,
-          fontWeight: 700,
-          letterSpacing: "-0.02em",
+          fontFamily: "'Instrument Sans', sans-serif",
+          fontSize: 10,
+          fontWeight: 600,
+          color: "rgba(255,255,255,0.35)",
+          textTransform: "uppercase",
+          letterSpacing: "0.12em",
+          padding: "8px 16px 6px",
         }}
       >
-        🐾 ChunkyNorris
+        Management
       </div>
 
       {/* Nav items */}
@@ -50,37 +78,40 @@ export function Sidebar() {
                 display: "flex",
                 alignItems: "center",
                 gap: 10,
-                padding: "10px 12px",
-                borderRadius: 8,
+                padding: "10px 16px",
+                borderRadius: 10,
                 textDecoration: "none",
-                fontSize: 14,
-                fontWeight: 500,
-                backgroundColor: isActive ? "#fff" : "transparent",
-                color: isActive ? "#2D5A27" : "#fff",
-                transition: "background-color 0.15s",
+                fontFamily: "'Instrument Sans', sans-serif",
+                fontSize: 13,
+                fontWeight: 600,
+                backgroundColor: isActive ? "rgba(255,255,255,0.12)" : "transparent",
+                color: isActive ? "#fff" : "rgba(255,255,255,0.7)",
+                transition: "background-color 0.15s, color 0.15s",
               }}
             >
-              <span style={{ fontSize: 16 }}>{item.icon}</span>
+              <span style={{ fontSize: 15 }}>{item.icon}</span>
               {item.label}
             </Link>
           );
         })}
       </nav>
 
-      {/* Sign out button */}
+      {/* Sign out */}
       <div style={{ padding: "16px" }}>
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
           style={{
             width: "100%",
-            padding: "10px 12px",
-            borderRadius: 8,
-            border: "1px solid rgba(255,255,255,0.3)",
+            padding: "10px 16px",
+            borderRadius: 10,
+            border: "1.5px solid rgba(255,255,255,0.25)",
             backgroundColor: "transparent",
-            color: "#fff",
-            fontSize: 14,
-            fontWeight: 500,
+            color: "rgba(255,255,255,0.7)",
+            fontFamily: "'Instrument Sans', sans-serif",
+            fontSize: 13,
+            fontWeight: 600,
             cursor: "pointer",
+            transition: "border-color 0.15s, color 0.15s",
           }}
         >
           Sign out

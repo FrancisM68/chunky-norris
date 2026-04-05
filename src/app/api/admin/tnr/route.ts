@@ -25,13 +25,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const statusFilter =
       scope === "all"
         ? undefined
-        : { in: ["IN_PROGRESS", "ON_HOLD"] as const };
+        : { in: ["IN_PROGRESS", "ON_HOLD"] };
 
     const locationFilter = q
       ? { locationName: { contains: q, mode: "insensitive" as const } }
       : {};
 
-    const where = {
+    const where: any = {
       ...(statusFilter ? { status: statusFilter } : {}),
       ...locationFilter,
     };

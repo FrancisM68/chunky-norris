@@ -138,8 +138,27 @@ function toDisplayDate(iso: string | null | undefined): string {
 
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ border: "1px solid #e5e7eb", borderRadius: 8, padding: "12px 16px", marginBottom: 12 }}>
-      <div style={{ fontSize: 11, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>
+    <div
+      style={{
+        backgroundColor: "#fff",
+        border: "1px solid rgba(0,0,0,0.06)",
+        borderRadius: 16,
+        padding: "16px 20px",
+        marginBottom: 12,
+        boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "'Instrument Sans', sans-serif",
+          fontSize: 11,
+          fontWeight: 600,
+          color: "#6B7A5E",
+          textTransform: "uppercase",
+          letterSpacing: "0.1em",
+          marginBottom: 12,
+        }}
+      >
         {title}
       </div>
       {children}
@@ -150,7 +169,20 @@ function SectionCard({ title, children }: { title: string; children: React.React
 function FieldRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 10 }}>
-      <label style={{ display: "block", fontSize: 11, color: "#374151", marginBottom: 3 }}>{label}</label>
+      <label
+        style={{
+          display: "block",
+          fontFamily: "'Instrument Sans', sans-serif",
+          fontSize: 11,
+          fontWeight: 600,
+          color: "#6B7A5E",
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          marginBottom: 4,
+        }}
+      >
+        {label}
+      </label>
       {children}
     </div>
   );
@@ -167,14 +199,33 @@ function TwoCol({ children }: { children: React.ReactNode }) {
 
 function inputStyle(hasError?: boolean): React.CSSProperties {
   return {
-    width: "100%", padding: "6px 10px", border: `1px solid ${hasError ? "#ef4444" : "#d1d5db"}`,
-    borderRadius: 5, fontSize: 13, boxSizing: "border-box", backgroundColor: "#fff",
+    width: "100%",
+    padding: "10px 14px",
+    border: `1.5px solid ${hasError ? "#C0392B" : "rgba(0,0,0,0.12)"}`,
+    borderRadius: 10,
+    fontFamily: "'Instrument Sans', sans-serif",
+    fontSize: 14,
+    color: "#1C2A19",
+    boxSizing: "border-box",
+    backgroundColor: "#fff",
+    outline: "none",
   };
 }
 
 function ErrorMsg({ msg }: { msg?: string }) {
   if (!msg) return null;
-  return <div style={{ fontSize: 11, color: "#ef4444", marginTop: 2 }}>{msg}</div>;
+  return (
+    <div
+      style={{
+        fontFamily: "'Instrument Sans', sans-serif",
+        fontSize: 11,
+        color: "#C0392B",
+        marginTop: 3,
+      }}
+    >
+      {msg}
+    </div>
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -184,8 +235,27 @@ function ErrorMsg({ msg }: { msg?: string }) {
 function ViewRow({ label, value }: { label: string; value: string | null | undefined }) {
   return (
     <>
-      <span style={{ color: "#6b7280", fontSize: 13 }}>{label}</span>
-      <span style={{ color: value ? "#111827" : "#9ca3af", fontSize: 13 }}>{value || "—"}</span>
+      <span
+        style={{
+          fontFamily: "'Instrument Sans', sans-serif",
+          fontSize: 11,
+          fontWeight: 600,
+          color: "#6B7A5E",
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+        }}
+      >
+        {label}
+      </span>
+      <span
+        style={{
+          fontFamily: "'Instrument Sans', sans-serif",
+          fontSize: 14,
+          color: value ? "#1C2A19" : "#9AA890",
+        }}
+      >
+        {value || "—"}
+      </span>
     </>
   );
 }
@@ -200,30 +270,94 @@ function ViewMode({ animal, onEdit }: { animal: AnimalDetail; onEdit: () => void
   return (
     <div>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+      <div
+        style={{
+          backgroundColor: "#2D5A27",
+          padding: "24px 32px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+          gap: 12,
+        }}
+      >
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 700, color: "#111827", margin: 0 }}>
+          <h1
+            style={{
+              fontFamily: "'Fraunces', serif",
+              fontSize: 28,
+              fontWeight: 600,
+              color: "#fff",
+              margin: 0,
+              lineHeight: 1.2,
+            }}
+          >
             {animal.nickname ?? animal.officialName}
           </h1>
           {animal.nickname && (
-            <div style={{ fontSize: 12, color: "#6b7280", marginTop: 2 }}>{animal.officialName}</div>
+            <div
+              style={{
+                fontFamily: "'Instrument Sans', sans-serif",
+                fontSize: 13,
+                color: "rgba(255,255,255,0.6)",
+                marginTop: 4,
+              }}
+            >
+              {animal.officialName}
+            </div>
           )}
         </div>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <span style={{ ...statusPillStyle(animal.status), padding: "4px 12px", borderRadius: 12, fontSize: 12, fontWeight: 600 }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+          <span
+            style={{
+              ...statusPillStyle(animal.status),
+              padding: "4px 12px",
+              borderRadius: 6,
+              fontFamily: "'Instrument Sans', sans-serif",
+              fontSize: 11,
+              fontWeight: 600,
+              display: "inline-block",
+            }}
+          >
             {statusLabel(animal.status)}
           </span>
           <Link
             href={`/admin/animals/${animal.id}/treatments`}
-            style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid #d1d5db", backgroundColor: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, textDecoration: "none" }}
+            style={{
+              padding: "8px 16px",
+              borderRadius: 10,
+              border: "1.5px solid rgba(255,255,255,0.35)",
+              backgroundColor: "transparent",
+              color: "#fff",
+              fontFamily: "'Instrument Sans', sans-serif",
+              fontSize: 13,
+              fontWeight: 600,
+              textDecoration: "none",
+            }}
           >
             Treatments
           </Link>
-          <button onClick={onEdit} style={{ padding: "6px 14px", borderRadius: 6, backgroundColor: "#2D5A27", color: "#fff", border: "none", fontSize: 13, fontWeight: 500, cursor: "pointer" }}>
+          <button
+            onClick={onEdit}
+            style={{
+              padding: "8px 16px",
+              borderRadius: 10,
+              backgroundColor: "#fff",
+              color: "#2D5A27",
+              border: "none",
+              fontFamily: "'Instrument Sans', sans-serif",
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
             Edit
           </button>
         </div>
       </div>
+
+      {/* Content area */}
+      <div style={{ padding: "28px 32px" }}>
 
       {/* Two-column section grid */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, alignItems: "start" }}>
@@ -310,13 +444,43 @@ function ViewMode({ animal, onEdit }: { animal: AnimalDetail; onEdit: () => void
 
       {/* Legacy notes — full width below both columns */}
       {animal.legacyNotes !== null && (
-        <div style={{ border: "1px dashed #d1d5db", borderRadius: 8, padding: "12px 16px", backgroundColor: "#f9fafb", marginTop: 0 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
+        <div
+          style={{
+            border: "1px dashed rgba(0,0,0,0.12)",
+            borderRadius: 12,
+            padding: "14px 16px",
+            backgroundColor: "#EDE8DF",
+            marginTop: 0,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "'Instrument Sans', sans-serif",
+              fontSize: 11,
+              fontWeight: 600,
+              color: "#9AA890",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              marginBottom: 8,
+            }}
+          >
             Legacy Notes — imported record
           </div>
-          <p style={{ margin: 0, fontSize: 12, color: "#6b7280", whiteSpace: "pre-wrap" }}>{animal.legacyNotes}</p>
+          <p
+            style={{
+              margin: 0,
+              fontFamily: "'Instrument Sans', sans-serif",
+              fontSize: 13,
+              color: "#6B7A5E",
+              whiteSpace: "pre-wrap",
+            }}
+          >
+            {animal.legacyNotes}
+          </p>
         </div>
       )}
+
+      </div> {/* /content area */}
     </div>
   );
 }
@@ -466,45 +630,122 @@ export function AnimalForm({ animal }: { animal: AnimalDetail | null }) {
   return (
     <form onSubmit={handleSubmit}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: "#111827", margin: 0 }}>
+      <div
+        style={{
+          backgroundColor: "#2D5A27",
+          padding: "24px 32px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: 12,
+        }}
+      >
+        <h1
+          style={{
+            fontFamily: "'Fraunces', serif",
+            fontSize: 28,
+            fontWeight: 600,
+            color: "#fff",
+            margin: 0,
+          }}
+        >
           {isCreate ? "Add Animal" : `Editing: ${animal?.nickname ?? animal?.officialName}`}
         </h1>
-        <button type="button" onClick={handleCancel}
-          style={{ padding: "6px 14px", borderRadius: 6, backgroundColor: "#fff", color: "#374151", border: "1px solid #d1d5db", fontSize: 13, cursor: "pointer" }}>
+        <button
+          type="button"
+          onClick={handleCancel}
+          style={{
+            padding: "8px 16px",
+            borderRadius: 10,
+            backgroundColor: "transparent",
+            color: "#fff",
+            border: "1.5px solid rgba(255,255,255,0.35)",
+            fontFamily: "'Instrument Sans', sans-serif",
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: "pointer",
+          }}
+        >
           Cancel
         </button>
       </div>
 
       {errors._global && (
-        <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 6, padding: "8px 12px", marginBottom: 12, fontSize: 13, color: "#b91c1c" }}>
+        <div
+          style={{
+            background: "#FDECEA",
+            border: "1px solid #F1948A",
+            borderRadius: 12,
+            padding: "10px 16px",
+            marginBottom: 12,
+            fontFamily: "'Instrument Sans', sans-serif",
+            fontSize: 14,
+            color: "#922B21",
+          }}
+        >
           {errors._global}
         </div>
       )}
 
+      {/* Form body */}
+      <div style={{ padding: "28px 32px" }}>
+
       {/* Species — full width */}
-      <div style={{ background: "#2D5A27", borderRadius: 8, padding: "12px 16px", marginBottom: 12 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.7)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
+      <div
+        style={{
+          backgroundColor: "#EEF5EC",
+          borderRadius: 16,
+          border: "1px solid #A8D5A2",
+          padding: "16px 20px",
+          marginBottom: 12,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'Instrument Sans', sans-serif",
+            fontSize: 11,
+            fontWeight: 600,
+            color: "#6B7A5E",
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+            marginBottom: 10,
+          }}
+        >
           Species *
         </div>
         <div style={{ display: "flex", gap: 6 }}>
           {SPECIES_OPTIONS.map((s) => (
-            <button key={s} type="button" onClick={() => setSpecies(s)}
+            <button
+              key={s}
+              type="button"
+              onClick={() => setSpecies(s)}
               style={{
-                flex: 1, padding: "6px 4px", borderRadius: 4, cursor: "pointer",
-                border: species === s ? "2px solid #fff" : "1px solid rgba(255,255,255,.4)",
-                backgroundColor: species === s ? "rgba(255,255,255,.25)" : "rgba(255,255,255,.1)",
-                color: "#fff", fontSize: 12, fontWeight: species === s ? 700 : 400,
-              }}>
+                flex: 1,
+                padding: "8px 4px",
+                borderRadius: 10,
+                cursor: "pointer",
+                border: species === s ? "2px solid #2D5A27" : "1.5px solid rgba(0,0,0,0.12)",
+                backgroundColor: species === s ? "#2D5A27" : "#fff",
+                color: species === s ? "#fff" : "#6B7A5E",
+                fontFamily: "'Instrument Sans', sans-serif",
+                fontSize: 13,
+                fontWeight: 600,
+              }}
+            >
               {speciesLabel(s)}
             </button>
           ))}
         </div>
         {species === "OTHER" && (
-          <div style={{ marginTop: 8 }}>
-            <input type="text" value={form.speciesOther} onChange={(e) => set("speciesOther", e.target.value)}
+          <div style={{ marginTop: 10 }}>
+            <input
+              type="text"
+              value={form.speciesOther}
+              onChange={(e) => set("speciesOther", e.target.value)}
               placeholder="Please specify *"
-              style={{ width: "100%", padding: "6px 10px", borderRadius: 4, border: `1px solid ${errors.speciesOther ? "#fca5a5" : "rgba(255,255,255,.4)"}`, backgroundColor: "rgba(255,255,255,.9)", fontSize: 13, boxSizing: "border-box" }} />
+              style={inputStyle(!!errors.speciesOther)}
+            />
             <ErrorMsg msg={errors.speciesOther} />
           </div>
         )}
@@ -715,16 +956,45 @@ export function AnimalForm({ animal }: { animal: AnimalDetail | null }) {
       </div>
 
       {/* Submit — full width */}
-      <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 16 }}>
-        <button type="button" onClick={handleCancel}
-          style={{ padding: "8px 18px", borderRadius: 6, backgroundColor: "#fff", color: "#374151", border: "1px solid #d1d5db", fontSize: 13, cursor: "pointer" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 20 }}>
+        <button
+          type="button"
+          onClick={handleCancel}
+          style={{
+            padding: "10px 20px",
+            borderRadius: 10,
+            backgroundColor: "#fff",
+            color: "#6B7A5E",
+            border: "1.5px solid rgba(0,0,0,0.12)",
+            fontFamily: "'Instrument Sans', sans-serif",
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: "pointer",
+          }}
+        >
           Cancel
         </button>
-        <button type="submit" disabled={saving}
-          style={{ padding: "8px 18px", borderRadius: 6, backgroundColor: saving ? "#6b9e65" : "#2D5A27", color: "#fff", border: "none", fontSize: 13, fontWeight: 600, cursor: saving ? "not-allowed" : "pointer" }}>
+        <button
+          type="submit"
+          disabled={saving}
+          style={{
+            padding: "10px 20px",
+            borderRadius: 10,
+            backgroundColor: saving ? "#6b9e65" : "#2D5A27",
+            color: "#fff",
+            border: "none",
+            fontFamily: "'Instrument Sans', sans-serif",
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: saving ? "not-allowed" : "pointer",
+            opacity: saving ? 0.7 : 1,
+          }}
+        >
           {saving ? "Saving…" : isCreate ? "Add Animal" : "Save Animal"}
         </button>
       </div>
+
+      </div> {/* /form body */}
     </form>
   );
 }

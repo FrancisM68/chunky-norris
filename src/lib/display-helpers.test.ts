@@ -46,46 +46,53 @@ describe("statusLabel", () => {
 });
 
 describe("statusPillStyle", () => {
-  it("returns orange colours for IN_CARE", () => {
+  it("returns forest-light green for IN_CARE", () => {
     const style = statusPillStyle("IN_CARE");
-    expect(style.backgroundColor).toBe("#fff3e0");
-    expect(style.color).toBe("#e65100");
-  });
-
-  it("returns green colours for FOSTERED", () => {
-    const style = statusPillStyle("FOSTERED");
-    expect(style.backgroundColor).toBe("#e8f5e9");
+    expect(style.backgroundColor).toBe("#EEF5EC");
     expect(style.color).toBe("#2D5A27");
+    expect(style.border).toBe("1px solid #A8D5A2");
   });
 
-  it("returns blue colours for ADOPTED", () => {
+  it("returns amber for FOSTERED", () => {
+    const style = statusPillStyle("FOSTERED");
+    expect(style.backgroundColor).toBe("#FFF3CD");
+    expect(style.color).toBe("#7A5C00");
+    expect(style.border).toBe("1px solid #F0D060");
+  });
+
+  it("returns blue for ADOPTED", () => {
     const style = statusPillStyle("ADOPTED");
-    expect(style.backgroundColor).toBe("#e3f2fd");
-    expect(style.color).toBe("#1565c0");
+    expect(style.backgroundColor).toBe("#E8F4FD");
+    expect(style.color).toBe("#1A5276");
+    expect(style.border).toBe("1px solid #AED6F1");
   });
 
-  it("returns purple colours for RETURNED_TO_OWNER", () => {
+  it("returns purple for RETURNED_TO_OWNER", () => {
     const style = statusPillStyle("RETURNED_TO_OWNER");
-    expect(style.backgroundColor).toBe("#f3e5f5");
-    expect(style.color).toBe("#6a1b9a");
+    expect(style.backgroundColor).toBe("#F4ECF7");
+    expect(style.color).toBe("#6C3483");
+    expect(style.border).toBe("1px solid #D7BDE2");
   });
 
-  it("returns red colours for EUTHANISED", () => {
+  it("returns red for EUTHANISED", () => {
     const style = statusPillStyle("EUTHANISED");
-    expect(style.backgroundColor).toBe("#fce4ec");
-    expect(style.color).toBe("#b71c1c");
+    expect(style.backgroundColor).toBe("#FDECEA");
+    expect(style.color).toBe("#922B21");
+    expect(style.border).toBe("1px solid #F1948A");
   });
 
-  it("returns red colours for DIED_IN_CARE", () => {
+  it("returns red for DIED_IN_CARE", () => {
     const style = statusPillStyle("DIED_IN_CARE");
-    expect(style.backgroundColor).toBe("#fce4ec");
-    expect(style.color).toBe("#b71c1c");
+    expect(style.backgroundColor).toBe("#FDECEA");
+    expect(style.color).toBe("#922B21");
+    expect(style.border).toBe("1px solid #F1948A");
   });
 
-  it("returns light-green colours for TNR_RETURNED", () => {
+  it("returns purple for TNR_RETURNED", () => {
     const style = statusPillStyle("TNR_RETURNED");
-    expect(style.backgroundColor).toBe("#f1f8e9");
-    expect(style.color).toBe("#558b2f");
+    expect(style.backgroundColor).toBe("#F4ECF7");
+    expect(style.color).toBe("#6C3483");
+    expect(style.border).toBe("1px solid #D7BDE2");
   });
 });
 
