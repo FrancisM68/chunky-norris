@@ -192,6 +192,23 @@ for cats only, kennel cough vaccination for dogs only, etc.
 
 ---
 
+## Code Discipline (Karpathy Principles)
+
+**Minimum viable code.**
+Write the minimum code that solves the problem. No speculative features, no 
+abstractions for single-use code, no "flexibility" or "configurability" that 
+wasn't asked for. If you wrote 200 lines and 50 would do, rewrite it. Before 
+submitting, ask yourself: "Would a senior engineer say this is overcomplicated?" 
+If yes, simplify.
+
+**Don't touch orthogonal code.**
+Do not modify, rewrite, or remove code that is unrelated to the current task — 
+even if you don't fully understand it. This includes middleware, schema files, 
+auth configuration, and tenant-switching logic. If something adjacent looks wrong, 
+flag it in a comment or mention it to Francisco. Do not silently "fix" it.
+
+---
+
 ## Roadmap
 
 See `.claude/ROADMAP.md` for the current development plan, milestones,
