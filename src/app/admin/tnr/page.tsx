@@ -236,6 +236,26 @@ export default async function TNRPage({
               Search
             </button>
           </form>
+
+          {/* New record */}
+          <a
+            href="/admin/tnr/new"
+            style={{
+              padding: "9px 18px",
+              borderRadius: 10,
+              border: "none",
+              backgroundColor: "#2D5A27",
+              color: "#fff",
+              fontFamily: "'Instrument Sans', sans-serif",
+              fontSize: 13,
+              fontWeight: 600,
+              textDecoration: "none",
+              display: "inline-block",
+              whiteSpace: "nowrap",
+            }}
+          >
+            + New TNR Record
+          </a>
         </div>
 
         {/* Table card */}
@@ -318,7 +338,12 @@ export default async function TNRPage({
                         maxWidth: 220,
                       }}
                     >
-                      {rec.locationName}
+                      <a
+                        href={`/admin/tnr/${rec.id}`}
+                        style={{ color: "#2D5A27", textDecoration: "none", fontWeight: 600 }}
+                      >
+                        {rec.locationName}
+                      </a>
                     </td>
                     <td style={{ padding: "14px 20px", fontFamily: "'Instrument Sans', sans-serif", fontSize: 14, color: "#6B7A5E" }}>
                       {rec.county}
