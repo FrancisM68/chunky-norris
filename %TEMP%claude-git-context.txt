@@ -7,8 +7,8 @@ Changes not staged for commit:
 	modified:   %TEMP%claude-git-context.txt
 
 no changes added to commit (use "git add" and/or "git commit -a")
+7a43223 Commit message for changes to %TEMP%claude-git-context.txt
 dbff79a Added support documents and revised CLAUDE.md to include new information about the grant application process and requirements. The new support documents include the DAR Fosterer Agreement for June 2025 and the Department of Agriculture's Animal Welfare Grant Form (AWGF Part B) for 2024. These documents will assist in ensuring compliance with grant application guidelines and provide necessary information for successful submissions.
 00a825f Corrected the settings.json file to include the correct API key for Claude integration.
 1451a03 Changes in settings and new files for design and documentation of superpowers plans, as well as a cleanup script for test animals.
 1240b01 Corrected settings.json to fix the issue with the new version of Claude. The issue was that the "claude" field was missing from the settings, which caused the new version of Claude to not work properly. I added the "claude" field back to the settings and set it to an empty object, which should allow the new version of Claude to work properly.
-49b328a docs(claude): add UI development rule — always read DESIGN.md first
